@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MESSERSI - Monitoraggio Fotovoltaico</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #0a1628;
+            color: #ffffff;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #1e3a5f 0%, #0d2137 100%);
+            padding: 25px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #00d4aa;
+        }
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .header-brand h1 {
+            font-size: 2.8rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: #ffffff;
+        }
+        .header-brand .subtitle {
+            font-size: 1.3rem;
+            color: #00d4aa;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+        .status-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #00d4aa;
+            box-shadow: 0 0 15px #00d4aa;
+            animation: pulse 2.5s infinite;
+        }
+        .status-dot.offline {
+            background: #e74c3c;
+            box-shadow: 0 0 15px #e74c3c;
+            animation: none;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        .main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1.2fr 0.8fr;
+            gap: 25px;
+            padding: 25px 50px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #132238 0%, #1a2d4a 100%);
+            border-radius: 24px;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #1e3a5f;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #00d4aa, #00a8e8);
+        }
+        .card:hover { transform: translateY(-2px); }
+
+        .card-label {
+            font-size: 1.4rem;
+            color: #8899aa;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .card-value {
+            font-size: 6rem;
+            font-weight: 800;
+            line-height: 1;
+            text-shadow: 0 0 30px rgba(0, 212, 170, 0.3);
+        }
+        .card-unit {
+            font-size: 2rem;
+            color: #8899aa;
+            margin-top: 12px;
+            font-weight: 300;
+        }
+        .card-sub {
+            font-size: 1.1rem;
+            color: #556677;
+            margin-top: 18px;
+            font-weight: 400;
+        }
+
+        .power-card .card-value { 
+            color: #ffd700; 
+            font-size: 7rem;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+        }
+        .energy-today .card-value { color: #00d4aa; }
+        .energy-total .card-value { color: #00a8e8; }
+        .co2-card .card-value { 
+            color: #7ee787; 
+            font-size: 5rem;
+        }
+
+        .chart-card {
+            grid-column: 1 / -1;
+            padding: 20px 35px;
+        }
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .chart-title {
+            font-size: 1.3rem;
+            color: #8899aa;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        .chart-legend {
+            display: flex;
+            gap: 25px;
+            font-size: 1rem;
+            color: #556677;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: calc(100% - 60px);
+        }
+        .chart-bar {
+            transition: height 0.8s ease-out;
+        }
+        .chart-bar:hover { opacity: 0.8; }
+        .axis-text {
+            fill: #556677;
+            font-size: 12px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .grid-line {
+            stroke: #1e3a5f;
+            stroke-width: 1;
+            stroke-dasharray: 4,4;
+        }
+
+        .footer {
+            background: #0d2137;
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+            color: #556677;
+            border-top: 1px solid #1e3a5f;
+        }
+        .footer-brand { font-weight: 600; color: #8899aa; }
+        .last-update { 
+            color: #00d4aa; 
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .update-dot {
+            width: 8px;
+            height: 8px;
+            background: #00d4aa;
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: #0a1628;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.6s ease;
+        }
+        .loading-overlay.hidden { 
+            opacity: 0; 
+            pointer-events: none; 
+        }
+        .spinner {
+            width: 80px; 
+            height: 80px;
+            border: 5px solid #1e3a5f;
+            border-top-color: #00d4aa;
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite;
+        }
+        .loading-text {
+            margin-top: 30px;
+            color: #8899aa;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-toast {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: #e74c3c;
+            color: white;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            z-index: 999;
+            display: none;
+            animation: slideIn 0.3s ease;
+            max-width: 400px;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .fullscreen-hint {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 212, 170, 0.15);
+            border: 1px solid #00d4aa;
+            color: #00d4aa;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+        .fullscreen-hint.show { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <div class="loading-overlay" id="loading">
+        <div class="spinner"></div>
+        <p class="loading-text">Connessione a SolarEdge...</p>
+    </div>
+
+    <div class="error-toast" id="errorToast"></div>
+    <div class="fullscreen-hint" id="fullscreenHint">Premi F per schermo intero</div>
+
+    <header class="header">
+        <div class="header-brand">
+            <h1>☀️ MESSERSI</h1>
+            <div class="subtitle">Impianto Fotovoltaico 566 kWp</div>
+        </div>
+        <div class="status">
+            <div class="status-dot" id="statusDot"></div>
+            <span id="statusText">Connessione...</span>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="card power-card">
+            <div class="card-label">⚡ Potenza Attuale</div>
+            <div class="card-value" id="currentPower">--</div>
+            <div class="card-unit">kW</div>
+            <div class="card-sub" id="powerPerc">--% potenza nominale</div>
+        </div>
+
+        <div class="card energy-today">
+            <div class="card-label">📅 Energia Oggi</div>
+            <div class="card-value" id="energyToday">--</div>
+            <div class="card-unit">kWh</div>
+            <div class="card-sub" id="energyTodayMWh">-- MWh</div>
+        </div>
+
+        <div class="card energy-total">
+            <div class="card-label">🏆 Energia Totale</div>
+            <div class="card-value" id="energyTotal">--</div>
+            <div class="card-unit">MWh</div>
+            <div class="card-sub" id="energyTotalGWh">-- GWh totali</div>
+        </div>
+
+        <div class="card co2-card">
+            <div class="card-label">🌱 CO₂ Risparmiata</div>
+            <div class="card-value" id="co2Saved">--</div>
+            <div class="card-unit">kg</div>
+            <div class="card-sub">≈ <span id="trees">--</span> alberi equivalenti</div>
+        </div>
+
+        <div class="card chart-card">
+            <div class="chart-header">
+                <div class="chart-title">Produzione Oraria - Oggi</div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:#00d4aa"></div>
+                        <span>Produzione (kWh)</span>
+                    </div>
+                </div>
+            </div>
+            <svg class="chart-svg" id="chartSvg" viewBox="0 0 1200 300" preserveAspectRatio="none">
+            </svg>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-brand">SolarEdge Monitoring System</div>
+        <div class="last-update">
+            <div class="update-dot"></div>
+            <span>Aggiornato: <span id="lastUpdate">--</span></span>
+        </div>
+    </footer>
+
+    <script>
+        const CONFIG = {
+            NOMINAL_POWER_KW: 566,
+            CO2_FACTOR: 0.4,
+            TREE_FACTOR: 10,
+            REFRESH_MS: 5 * 60 * 1000,
+            API_BASE: '/api/solaredge'
+        };
+
+        async function apiCall(endpoint, params = {}) {
+            const qs = new URLSearchParams({ endpoint, ...params });
+            const url = `${CONFIG.API_BASE}?${qs}`;
+            
+            try {
+                const res = await fetch(url);
+                if (!res.ok) {
+                    const err = await res.text();
+                    throw new Error(`HTTP ${res.status}: ${err}`);
+                }
+                return await res.json();
+            } catch (e) {
+                showError(`Errore API: ${e.message}`);
+                throw e;
+            }
+        }
+
+        async function updateDashboard() {
+            try {
+                const overview = await apiCall('overview');
+                const site = overview.overview;
+
+                const powerW = site.currentPower?.power || 0;
+                const powerKW = (powerW / 1000).toFixed(1);
+                document.getElementById('currentPower').textContent = powerKW;
+                
+                const perc = Math.min(((powerW/1000) / CONFIG.NOMINAL_POWER_KW * 100), 100).toFixed(1);
+                document.getElementById('powerPerc').textContent = 
+                    `${perc}% di ${CONFIG.NOMINAL_POWER_KW} kW nominale`;
+
+                const todayWh = site.lastDayData?.energy || 0;
+                const todayKWh = (todayWh / 1000).toFixed(1);
+                document.getElementById('energyToday').textContent = todayKWh;
+                document.getElementById('energyTodayMWh').textContent = 
+                    `${(todayWh / 1000000).toFixed(3)} MWh`;
+
+                const totalWh = site.lifeTimeData?.energy || 0;
+                const totalMWh = (totalWh / 1000000).toFixed(2);
+                document.getElementById('energyTotal').textContent = totalMWh;
+                document.getElementById('energyTotalGWh').textContent = 
+                    `${(totalWh / 1000000000).toFixed(3)} GWh`;
+
+                const co2Kg = Math.round((totalWh / 1000) * CONFIG.CO2_FACTOR);
+                document.getElementById('co2Saved').textContent = co2Kg.toLocaleString('it-IT');
+                
+                const trees = Math.round(co2Kg / CONFIG.TREE_FACTOR);
+                document.getElementById('trees').textContent = trees.toLocaleString('it-IT');
+
+                const isProducing = powerW > 10;
+                const dot = document.getElementById('statusDot');
+                const txt = document.getElementById('statusText');
+                
+                if (isProducing) {
+                    dot.classList.remove('offline');
+                    txt.textContent = 'Produzione Attiva';
+                    txt.style.color = '#00d4aa';
+                } else {
+                    dot.classList.add('offline');
+                    txt.textContent = 'In Standby / Notte';
+                    txt.style.color = '#e74c3c';
+                }
+
+                const now = new Date();
+                document.getElementById('lastUpdate').textContent = 
+                    now.toLocaleString('it-IT', {
+                        day: '2-digit', month: '2-digit', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit'
+                    });
+
+                await updateChart();
+                hideLoading();
+
+            } catch (e) {
+                console.error('Update error:', e);
+            }
+        }
+
+        async function updateChart() {
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                const energy = await apiCall('energy', {
+                    timeUnit: 'QUARTER_OF_AN_HOUR',
+                    startDate: today,
+                    endDate: today
+                });
+
+                const values = energy.energy?.values || [];
+                
+                const hourly = new Array(24).fill(0);
+                const counts = new Array(24).fill(0);
+                
+                values.forEach(v => {
+                    if (!v.value) return;
+                    const h = new Date(v.date).getHours();
+                    hourly[h] += v.value;
+                    counts[h]++;
+                });
+                
+                const data = hourly.map((sum, i) => 
+                    counts[i] > 0 ? (sum / counts[i] / 1000).toFixed(2) : 0
+                );
+
+                renderChart(data);
+
+            } catch (e) {
+                console.error('Chart error:', e);
+                renderChart(new Array(24).fill(0));
+            }
+        }
+
+        function renderChart(data) {
+            const svg = document.getElementById('chartSvg');
+            const w = 1200, h = 300;
+            const pad = { top: 20, right: 30, bottom: 40, left: 60 };
+            const chartW = w - pad.left - pad.right;
+            const chartH = h - pad.top - pad.bottom;
+            
+            const max = Math.max(...data, 1);
+            const barW = (chartW / 24) * 0.7;
+            const gap = (chartW / 24) * 0.3;
+
+            let html = '';
+            
+            for (let i = 0; i <= 5; i++) {
+                const y = pad.top + (chartH * i / 5);
+                const val = (max * (5-i) / 5).toFixed(1);
+                html += `<line x1="${pad.left}" y1="${y}" x2="${w-pad.right}" y2="${y}" class="grid-line"/>`;
+                html += `<text x="${pad.left-10}" y="${y+4}" text-anchor="end" class="axis-text">${val}</text>`;
+            }
+
+            data.forEach((val, i) => {
+                const barH = (val / max) * chartH;
+                const x = pad.left + (i * (barW + gap)) + gap/2;
+                const y = pad.top + chartH - barH;
+                
+                const intensity = val / max;
+                const color = intensity > 0.7 ? '#00d4aa' : 
+                             intensity > 0.3 ? '#00a8e8' : '#1e3a5f';
+                
+                html += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" 
+                         fill="${color}" rx="3" class="chart-bar">
+                         <title>${i}:00 - ${val} kWh</title></rect>`;
+                
+                if (i % 3 === 0) {
+                    html += `<text x="${x + barW/2}" y="${h-10}" text-anchor="middle" class="axis-text">${i}:00</text>`;
+                }
+            });
+
+            svg.innerHTML = html;
+        }
+
+        function showError(msg) {
+            const toast = document.getElementById('errorToast');
+            toast.textContent = msg;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 8000);
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.add('hidden');
+        }
+
+        setTimeout(() => {
+            const hint = document.getElementById('fullscreenHint');
+            if (!document.fullscreenElement) {
+                hint.classList.add('show');
+                setTimeout(() => hint.classList.remove('show'), 4000);
+            }
+        }, 2000);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            }
+        });
+
+        document.addEventListener('dblclick', toggleFullscreen);
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        let cursorTimeout;
+        document.addEventListener('mousemove', () => {
+            document.body.style.cursor = 'default';
+            clearTimeout(cursorTimeout);
+            cursorTimeout = setTimeout(() => {
+                document.body.style.cursor = 'none';
+            }, 3000);
+        });
+
+        updateDashboard();
+        setInterval(updateDashboard, CONFIG.REFRESH_MS);
+        setTimeout(() => location.reload(), 60 * 60 * 1000);
+    </script>
+</body>
+</html>
