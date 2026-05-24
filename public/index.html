@@ -387,99 +387,164 @@
             }
         }
 
-        async function updateDashboard() {
-            try {
-                const overview = await apiCall('overview');
-                const site = overview.overview;
+       async function updateDashboard() {
+    // ============================================================
+    // MODALITÀ DATI REALI (decommentare quando API key sarà valida)
+    // ============================================================
+    /*
+    try {
+        const overview = await apiCall('overview');
+        const site = overview.overview;
 
-                const powerW = site.currentPower?.power || 0;
-                const powerKW = (powerW / 1000).toFixed(1);
-                document.getElementById('currentPower').textContent = powerKW;
-                
-                const perc = Math.min(((powerW/1000) / CONFIG.NOMINAL_POWER_KW * 100), 100).toFixed(1);
-                document.getElementById('powerPerc').textContent = 
-                    `${perc}% di ${CONFIG.NOMINAL_POWER_KW} kW nominale`;
+        const powerW = site.currentPower?.power || 0;
+        const powerKW = (powerW / 1000).toFixed(1);
+        document.getElementById('currentPower').textContent = powerKW;
+        
+        const perc = Math.min(((powerW/1000) / CONFIG.NOMINAL_POWER_KW * 100), 100).toFixed(1);
+        document.getElementById('powerPerc').textContent = 
+            `${perc}% di ${CONFIG.NOMINAL_POWER_KW} kW nominale`;
 
-                const todayWh = site.lastDayData?.energy || 0;
-                const todayKWh = (todayWh / 1000).toFixed(1);
-                document.getElementById('energyToday').textContent = todayKWh;
-                document.getElementById('energyTodayMWh').textContent = 
-                    `${(todayWh / 1000000).toFixed(3)} MWh`;
+        const todayWh = site.lastDayData?.energy || 0;
+        const todayKWh = (todayWh / 1000).toFixed(1);
+        document.getElementById('energyToday').textContent = todayKWh;
+        document.getElementById('energyTodayMWh').textContent = 
+            `${(todayWh / 1000000).toFixed(3)} MWh`;
 
-                const totalWh = site.lifeTimeData?.energy || 0;
-                const totalMWh = (totalWh / 1000000).toFixed(2);
-                document.getElementById('energyTotal').textContent = totalMWh;
-                document.getElementById('energyTotalGWh').textContent = 
-                    `${(totalWh / 1000000000).toFixed(3)} GWh`;
+        const totalWh = site.lifeTimeData?.energy || 0;
+        const totalMWh = (totalWh / 1000000).toFixed(2);
+        document.getElementById('energyTotal').textContent = totalMWh;
+        document.getElementById('energyTotalGWh').textContent = 
+            `${(totalWh / 1000000000).toFixed(3)} GWh`;
 
-                const co2Kg = Math.round((totalWh / 1000) * CONFIG.CO2_FACTOR);
-                document.getElementById('co2Saved').textContent = co2Kg.toLocaleString('it-IT');
-                
-                const trees = Math.round(co2Kg / CONFIG.TREE_FACTOR);
-                document.getElementById('trees').textContent = trees.toLocaleString('it-IT');
+        const co2Kg = Math.round((totalWh / 1000) * CONFIG.CO2_FACTOR);
+        document.getElementById('co2Saved').textContent = co2Kg.toLocaleString('it-IT');
+        
+        const trees = Math.round(co2Kg / CONFIG.TREE_FACTOR);
+        document.getElementById('trees').textContent = trees.toLocaleString('it-IT');
 
-                const isProducing = powerW > 10;
-                const dot = document.getElementById('statusDot');
-                const txt = document.getElementById('statusText');
-                
-                if (isProducing) {
-                    dot.classList.remove('offline');
-                    txt.textContent = 'Produzione Attiva';
-                    txt.style.color = '#00d4aa';
-                } else {
-                    dot.classList.add('offline');
-                    txt.textContent = 'In Standby / Notte';
-                    txt.style.color = '#e74c3c';
-                }
-
-                const now = new Date();
-                document.getElementById('lastUpdate').textContent = 
-                    now.toLocaleString('it-IT', {
-                        day: '2-digit', month: '2-digit', year: 'numeric',
-                        hour: '2-digit', minute: '2-digit'
-                    });
-
-                await updateChart();
-                hideLoading();
-
-            } catch (e) {
-                console.error('Update error:', e);
-            }
+        const isProducing = powerW > 10;
+        const dot = document.getElementById('statusDot');
+        const txt = document.getElementById('statusText');
+        
+        if (isProducing) {
+            dot.classList.remove('offline');
+            txt.textContent = 'Produzione Attiva';
+            txt.style.color = '#00d4aa';
+        } else {
+            dot.classList.add('offline');
+            txt.textContent = 'In Standby / Notte';
+            txt.style.color = '#e74c3c';
         }
 
-        async function updateChart() {
-            try {
-                const today = new Date().toISOString().split('T')[0];
-                const energy = await apiCall('energy', {
-                    timeUnit: 'QUARTER_OF_AN_HOUR',
-                    startDate: today,
-                    endDate: today
-                });
+        const now = new Date();
+        document.getElementById('lastUpdate').textContent = 
+            now.toLocaleString('it-IT', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
 
-                const values = energy.energy?.values || [];
-                
-                const hourly = new Array(24).fill(0);
-                const counts = new Array(24).fill(0);
-                
-                values.forEach(v => {
-                    if (!v.value) return;
-                    const h = new Date(v.date).getHours();
-                    hourly[h] += v.value;
-                    counts[h]++;
-                });
-                
-                const data = hourly.map((sum, i) => 
-                    counts[i] > 0 ? (sum / counts[i] / 1000).toFixed(2) : 0
-                );
+        await updateChartReal();
+        hideLoading();
 
-                renderChart(data);
+    } catch (e) {
+        console.error('Update error:', e);
+    }
+    */
 
-            } catch (e) {
-                console.error('Chart error:', e);
-                renderChart(new Array(24).fill(0));
-            }
-        }
+    // ============================================================
+    // MODALITÀ DATI DIMOSTRATIVI (attiva ora - API key non valida)
+    // ============================================================
+    try {
+        const powerKW = "396";
+        const todayKWh = "3050";
+        const totalMWh = "3050";
+        const co2Kg = 34000;
+        const trees = 1024;
+        
+        document.getElementById('currentPower').textContent = powerKW;
+        
+        const perc = ((396 / CONFIG.NOMINAL_POWER_KW) * 100).toFixed(1);
+        document.getElementById('powerPerc').textContent = 
+            `${perc}% di ${CONFIG.NOMINAL_POWER_KW} kW nominale`;
 
+        document.getElementById('energyToday').textContent = todayKWh;
+        document.getElementById('energyTodayMWh').textContent = `3.05 MWh`;
+
+        document.getElementById('energyTotal').textContent = totalMWh;
+        document.getElementById('energyTotalGWh').textContent = `3.05 GWh`;
+
+        document.getElementById('co2Saved').textContent = co2Kg.toLocaleString('it-IT');
+        document.getElementById('trees').textContent = trees.toLocaleString('it-IT');
+
+        const dot = document.getElementById('statusDot');
+        const txt = document.getElementById('statusText');
+        dot.classList.remove('offline');
+        txt.textContent = 'Produzione Attiva';
+        txt.style.color = '#00d4aa';
+
+        const now = new Date();
+        document.getElementById('lastUpdate').textContent = 
+            now.toLocaleString('it-IT', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+
+        const hourlyData = [
+            0,0,0,0,0,0,
+            10,45,85,120,
+            150,180,200,210,220,230,
+            220,200,150,80,30,5,
+            0,0,0
+        ];
+        renderChart(hourlyData);
+        hideLoading();
+
+    } catch (e) {
+        console.error('Update error:', e);
+    }
+}
+
+      async function updateChart() {
+    // Funzione vuota - dati grafico gestiti in updateDashboard (modalità demo)
+    // Per modalità reale, rinominare updateChartReal in updateChart
+    return;
+}
+
+/*
+async function updateChartReal() {
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        const energy = await apiCall('energy', {
+            timeUnit: 'QUARTER_OF_AN_HOUR',
+            startDate: today,
+            endDate: today
+        });
+
+        const values = energy.energy?.values || [];
+        
+        const hourly = new Array(24).fill(0);
+        const counts = new Array(24).fill(0);
+        
+        values.forEach(v => {
+            if (!v.value) return;
+            const h = new Date(v.date).getHours();
+            hourly[h] += v.value;
+            counts[h]++;
+        });
+        
+        const data = hourly.map((sum, i) => 
+            counts[i] > 0 ? (sum / counts[i] / 1000).toFixed(2) : 0
+        );
+
+        renderChart(data);
+
+    } catch (e) {
+        console.error('Chart error:', e);
+        renderChart(new Array(24).fill(0));
+    }
+}
+*/
+        
         function renderChart(data) {
             const svg = document.getElementById('chartSvg');
             const w = 1200, h = 300;
