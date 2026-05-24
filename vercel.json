@@ -1,0 +1,7 @@
+{
+    "version": 2,
+    "routes": [
+        { "src": "/api/solaredge", "dest": "/api/solaredge.js" },
+        { "src": "/(.*)", "dest": "/public/$1" }
+    ]
+}
