@@ -3,116 +3,497 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MESSERSI - Monitoraggio Fotovoltaico</title>
+    <title>MESSERSÌ Packaging - Monitoraggio Fotovoltaico</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #0a1628; color: #fff; font-family: 'Segoe UI', sans-serif; height: 100vh; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; }
-        .header { background: linear-gradient(90deg, #1e3a5f, #0d2137); padding: 25px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #00d4aa; }
-        .header h1 { font-size: 2.8rem; font-weight: 300; letter-spacing: 3px; }
-        .subtitle { font-size: 1.3rem; color: #00d4aa; font-weight: 600; }
-        .status { display: flex; align-items: center; gap: 15px; font-size: 1.3rem; }
-        .status-dot { width: 18px; height: 18px; border-radius: 50%; background: #00d4aa; animation: pulse 2.5s infinite; }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .main { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1.2fr 0.8fr; gap: 25px; padding: 25px 50px; }
-        .card { background: linear-gradient(145deg, #132238, #1a2d4a); border-radius: 24px; padding: 35px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid #1e3a5f; position: relative; }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #00d4aa, #00a8e8); }
-        .card-label { font-size: 1.4rem; color: #8899aa; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 20px; }
-        .card-value { font-size: 6rem; font-weight: 800; line-height: 1; }
-        .card-unit { font-size: 2rem; color: #8899aa; margin-top: 12px; }
-        .card-sub { font-size: 1.1rem; color: #556677; margin-top: 18px; }
-        .power-card .card-value { color: #ffd700; font-size: 7rem; }
-        .energy-today .card-value { color: #00d4aa; }
-        .energy-total .card-value { color: #00a8e8; }
-        .co2-card .card-value { color: #7ee787; font-size: 5rem; }
-        .chart-card { grid-column: 1 / -1; padding: 20px 35px; }
-        .chart-header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px; }
-        .chart-title { font-size: 1.3rem; color: #8899aa; text-transform: uppercase; letter-spacing: 3px; }
-        .chart-svg { width: 100%; height: calc(100% - 60px); }
-        .footer { background: #0d2137; padding: 18px 50px; display: flex; justify-content: space-between; align-items: center; font-size: 1rem; color: #556677; border-top: 1px solid #1e3a5f; }
-        .last-update { color: #00d4aa; font-weight: 500; display: flex; align-items: center; gap: 10px; }
-        .loading-overlay { position: fixed; inset: 0; background: #0a1628; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; transition: opacity 0.6s; }
-        .loading-overlay.hidden { opacity: 0; pointer-events: none; }
-        .spinner { width: 80px; height: 80px; border: 5px solid #1e3a5f; border-top-color: #00d4aa; border-radius: 50%; animation: spin 1.2s linear infinite; }
+        
+        body {
+            background: #0a1628;
+            color: #ffffff;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(90deg, #0d2137 0%, #1a3a2a 100%);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #00a651;
+        }
+        .header-left {
+            display: flex;
+            flex-direction: column;
+        }
+        .header-left h1 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+        .header-left .subtitle {
+            font-size: 1rem;
+            color: #7ed957;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        /* WIDGET METEO */
+        .weather-widget {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 166, 81, 0.15);
+            border: 1px solid #00a651;
+            border-radius: 16px;
+            padding: 12px 20px;
+        }
+        .weather-icon {
+            font-size: 2.5rem;
+        }
+        .weather-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .weather-temp {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #7ed957;
+        }
+        .weather-desc {
+            font-size: 0.9rem;
+            color: #8899aa;
+        }
+        .weather-details {
+            font-size: 0.8rem;
+            color: #556677;
+            margin-top: 4px;
+        }
+        
+        /* STATUS */
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        .status-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #00a651;
+            box-shadow: 0 0 15px #00a651;
+            animation: pulse 2.5s infinite;
+        }
+        .status-dot.offline {
+            background: #e74c3c;
+            box-shadow: 0 0 15px #e74c3c;
+            animation: none;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        /* MAIN */
+        .main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1.2fr 0.8fr;
+            gap: 25px;
+            padding: 25px 50px;
+        }
+
+        /* CARDS */
+        .card {
+            background: linear-gradient(145deg, #132238 0%, #1a2d4a 100%);
+            border-radius: 24px;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #1e3a5f;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #00a651, #7ed957);
+        }
+
+        .card-label {
+            font-size: 1.4rem;
+            color: #8899aa;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+        }
+        .card-value {
+            font-size: 6rem;
+            font-weight: 800;
+            line-height: 1;
+            text-shadow: 0 0 30px rgba(0, 166, 81, 0.3);
+        }
+        .card-unit {
+            font-size: 2rem;
+            color: #8899aa;
+            margin-top: 12px;
+        }
+        .card-sub {
+            font-size: 1.1rem;
+            color: #556677;
+            margin-top: 18px;
+        }
+
+        .power-card .card-value { 
+            color: #00a651; 
+            font-size: 7rem;
+            text-shadow: 0 0 40px rgba(0, 166, 81, 0.4);
+        }
+        .energy-today .card-value { color: #7ed957; }
+        .energy-total .card-value { color: #2e8b9b; }
+        .co2-card .card-value { 
+            color: #7ed957; 
+            font-size: 5rem;
+        }
+
+        /* CHART */
+        .chart-card {
+            grid-column: 1 / -1;
+            padding: 20px 35px;
+        }
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .chart-title {
+            font-size: 1.3rem;
+            color: #8899aa;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        .chart-svg {
+            width: 100%;
+            height: calc(100% - 60px);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #0d2137;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #556677;
+            border-top: 1px solid #1e3a5f;
+        }
+        .footer-brand {
+            font-weight: 600;
+            color: #8899aa;
+        }
+        .footer-brand span {
+            color: #7ed957;
+        }
+        .last-update { 
+            color: #00a651; 
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .update-dot {
+            width: 8px;
+            height: 8px;
+            background: #00a651;
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* LOADING */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: #0a1628;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.6s;
+        }
+        .loading-overlay.hidden { 
+            opacity: 0; 
+            pointer-events: none; 
+        }
+        .spinner {
+            width: 80px; 
+            height: 80px;
+            border: 5px solid #1e3a5f;
+            border-top-color: #00a651;
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite;
+        }
+        .loading-text {
+            margin-top: 30px;
+            color: #8899aa;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-toast {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: #e74c3c;
+            color: white;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            z-index: 999;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <div class="loading-overlay" id="loading"><div class="spinner"></div><p style="margin-top:30px;color:#8899aa;font-size:1.4rem;">Connessione a SolarEdge...</p></div>
-    <header class="header"><div><h1>☀️ MESSERSI</h1><div class="subtitle">Impianto Fotovoltaico 600 kWp</div></div><div class="status"><div class="status-dot" id="statusDot"></div><span id="statusText">Connessione...</span></div></header>
+
+    <div class="loading-overlay" id="loading">
+        <div class="spinner"></div>
+        <p class="loading-text">Connessione a SolarEdge...</p>
+    </div>
+
+    <div class="error-toast" id="errorToast"></div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <h1>MESSERSÌ PACKAGING</h1>
+            <div class="subtitle">Via Primo Maggio 8 - Barbara (AN) Italy | Impianto Fotovoltaico 600 kWp</div>
+        </div>
+        <div class="header-right">
+            <!-- WIDGET METEO -->
+            <div class="weather-widget" id="weatherWidget">
+                <div class="weather-icon" id="weatherIcon">🌡️</div>
+                <div class="weather-info">
+                    <div class="weather-temp" id="weatherTemp">--°C</div>
+                    <div class="weather-desc" id="weatherDesc">Caricamento...</div>
+                    <div class="weather-details" id="weatherDetails">--</div>
+                </div>
+            </div>
+            <!-- STATUS -->
+            <div class="status">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">Connessione...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN -->
     <main class="main">
-        <div class="card power-card"><div class="card-label">⚡ Potenza Attuale</div><div class="card-value" id="currentPower">--</div><div class="card-unit">kW</div><div class="card-sub" id="powerPerc">--% potenza nominale</div></div>
-        <div class="card energy-today"><div class="card-label">📅 Energia Oggi</div><div class="card-value" id="energyToday">--</div><div class="card-unit">kWh</div><div class="card-sub" id="energyTodayMWh">-- MWh</div></div>
-        <div class="card energy-total"><div class="card-label">🏆 Energia Totale</div><div class="card-value" id="energyTotal">--</div><div class="card-unit">MWh</div><div class="card-sub" id="energyTotalGWh">-- GWh totali</div></div>
-        <div class="card co2-card"><div class="card-label">🌱 CO₂ Risparmiata</div><div class="card-value" id="co2Saved">--</div><div class="card-unit">kg</div><div class="card-sub">≈ <span id="trees">--</span> alberi equivalenti</div></div>
-        <div class="card chart-card"><div class="chart-header"><div class="chart-title">Produzione Oraria - Oggi</div></div><svg class="chart-svg" id="chartSvg" viewBox="0 0 1200 300" preserveAspectRatio="none"></svg></div>
+        <div class="card power-card">
+            <div class="card-label">⚡ Potenza Attuale</div>
+            <div class="card-value" id="currentPower">--</div>
+            <div class="card-unit">kW</div>
+            <div class="card-sub" id="powerPerc">--% potenza nominale</div>
+        </div>
+
+        <div class="card energy-today">
+            <div class="card-label">📅 Energia Oggi</div>
+            <div class="card-value" id="energyToday">--</div>
+            <div class="card-unit">kWh</div>
+            <div class="card-sub" id="energyTodayMWh">-- MWh</div>
+        </div>
+
+        <div class="card energy-total">
+            <div class="card-label">🏆 Energia Totale</div>
+            <div class="card-value" id="energyTotal">--</div>
+            <div class="card-unit">MWh</div>
+            <div class="card-sub" id="energyTotalGWh">-- GWh totali</div>
+        </div>
+
+        <div class="card co2-card">
+            <div class="card-label">🌱 CO₂ Risparmiata</div>
+            <div class="card-value" id="co2Saved">--</div>
+            <div class="card-unit">kg</div>
+            <div class="card-sub">≈ <span id="trees">--</span> alberi equivalenti</div>
+        </div>
+
+        <div class="card chart-card">
+            <div class="chart-header">
+                <div class="chart-title">Produzione Oraria - Oggi</div>
+            </div>
+            <svg class="chart-svg" id="chartSvg" viewBox="0 0 1200 300" preserveAspectRatio="none"></svg>
+        </div>
     </main>
-    <footer class="footer"><div>SolarEdge Monitoring System</div><div class="last-update"><span>Aggiornato: <span id="lastUpdate">--</span></span></div></footer>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-brand">
+            Powered by <span>ENWE srl</span> - Soluzioni Energetiche & Tecnologiche
+        </div>
+        <div class="last-update">
+            <div class="update-dot"></div>
+            <span>Aggiornato: <span id="lastUpdate">--</span></span>
+        </div>
+    </footer>
 
 <script>
-const CONFIG = { NOMINAL_POWER_KW: 600, CO2_FACTOR: 0.4, TREE_FACTOR: 10, REFRESH_MS: 300000, API_BASE: '/api/solaredge' };
+const CONFIG = {
+    NOMINAL_POWER_KW: 600,
+    CO2_FACTOR: 0.4,
+    TREE_FACTOR: 10,
+    REFRESH_MS: 300000,
+    API_BASE: '/api/solaredge',
+    WEATHER_LAT: 43.5667,
+    WEATHER_LON: 13.5167
+};
 
+// API SolarEdge
 async function apiCall(endpoint, params) {
-    const qs = new URLSearchParams({endpoint: endpoint});
+    var qs = new URLSearchParams({endpoint: endpoint});
     if (params) {
-        for (let key in params) qs.append(key, params[key]);
+        for (var key in params) qs.append(key, params[key]);
     }
-    const res = await fetch(CONFIG.API_BASE + '?' + qs);
+    var res = await fetch(CONFIG.API_BASE + '?' + qs);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     return await res.json();
 }
 
+// API Meteo Open-Meteo (gratuita, no API key)
+async function getWeather() {
+    try {
+        var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + CONFIG.WEATHER_LAT + 
+                  '&longitude=' + CONFIG.WEATHER_LON + 
+                  '&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m' +
+                  '&timezone=Europe/Rome';
+        var res = await fetch(url);
+        if (!res.ok) throw new Error('Meteo HTTP ' + res.status);
+        var data = await res.json();
+        
+        var current = data.current;
+        var temp = current.temperature_2m;
+        var humidity = current.relative_humidity_2m;
+        var wind = current.wind_speed_10m;
+        var code = current.weather_code;
+        
+        // Icone WMO
+        var icons = {
+            0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
+            45: '🌫️', 48: '🌫️',
+            51: '🌦️', 53: '🌧️', 55: '🌧️',
+            61: '🌧️', 63: '🌧️', 65: '🌧️',
+            71: '🌨️', 73: '🌨️', 75: '🌨️',
+            95: '⛈️', 96: '⛈️', 99: '⛈️'
+        };
+        var icon = icons[code] || '🌡️';
+        
+        var descs = {
+            0: 'Sereno', 1: 'Prevalentemente sereno', 2: 'Parzialmente nuvoloso', 3: 'Nuvoloso',
+            45: 'Nebbia', 48: 'Nebbia con brina',
+            51: 'Pioggerella', 53: 'Pioggia leggera', 55: 'Pioggia moderata',
+            61: 'Pioggia leggera', 63: 'Pioggia moderata', 65: 'Pioggia forte',
+            71: 'Neve leggera', 73: 'Neve moderata', 75: 'Neve forte',
+            95: 'Temporale', 96: 'Temporale con grandine', 99: 'Temporale con grandine'
+        };
+        var desc = descs[code] || 'Condizioni variabili';
+        
+        document.getElementById('weatherIcon').textContent = icon;
+        document.getElementById('weatherTemp').textContent = temp + '°C';
+        document.getElementById('weatherDesc').textContent = desc;
+        document.getElementById('weatherDetails').textContent = '💧 ' + humidity + '% | 🌬️ ' + wind + ' km/h';
+        
+    } catch (e) {
+        console.error('Meteo error:', e);
+        document.getElementById('weatherDesc').textContent = 'Dati meteo non disponibili';
+    }
+}
+
+// Dashboard SolarEdge
 async function updateDashboard() {
     try {
-        const data = await apiCall('overview');
+        var data = await apiCall('overview');
         console.log('API response:', data);
         
-        const siteList = data.sitesOverviews && data.sitesOverviews.siteEnergyList;
+        var siteList = data.sitesOverviews && data.sitesOverviews.siteEnergyList;
         if (!siteList || !siteList[0]) {
             throw new Error('Dati sito non trovati');
         }
-        const site = siteList[0].siteOverview;
+        var site = siteList[0].siteOverview;
         if (!site) {
             throw new Error('siteOverview mancante');
         }
 
-        const powerW = (site.currentPower && site.currentPower.power) || 0;
-        const powerKW = (powerW / 1000).toFixed(1);
+        var powerW = (site.currentPower && site.currentPower.power) || 0;
+        var powerKW = (powerW / 1000).toFixed(1);
         document.getElementById('currentPower').textContent = powerKW;
         
-        const perc = Math.min(((powerW/1000) / CONFIG.NOMINAL_POWER_KW * 100), 100).toFixed(1);
+        var perc = Math.min(((powerW/1000) / CONFIG.NOMINAL_POWER_KW * 100), 100).toFixed(1);
         document.getElementById('powerPerc').textContent = perc + '% di ' + CONFIG.NOMINAL_POWER_KW + ' kW nominale';
 
-        const todayWh = (site.lastDayData && site.lastDayData.energy) || 0;
-        const todayKWh = (todayWh / 1000).toFixed(1);
+        var todayWh = (site.lastDayData && site.lastDayData.energy) || 0;
+        var todayKWh = (todayWh / 1000).toFixed(1);
         document.getElementById('energyToday').textContent = todayKWh;
         document.getElementById('energyTodayMWh').textContent = (todayWh / 1000000).toFixed(3) + ' MWh';
 
-        const totalWh = (site.lifeTimeData && site.lifeTimeData.energy) || 0;
-        const totalMWh = (totalWh / 1000000).toFixed(2);
+        var totalWh = (site.lifeTimeData && site.lifeTimeData.energy) || 0;
+        var totalMWh = (totalWh / 1000000).toFixed(2);
         document.getElementById('energyTotal').textContent = totalMWh;
         document.getElementById('energyTotalGWh').textContent = (totalWh / 1000000000).toFixed(3) + ' GWh';
 
-        const co2Kg = Math.round((totalWh / 1000) * CONFIG.CO2_FACTOR);
+        var co2Kg = Math.round((totalWh / 1000) * CONFIG.CO2_FACTOR);
         document.getElementById('co2Saved').textContent = co2Kg.toLocaleString('it-IT');
         
-        const trees = Math.round(co2Kg / CONFIG.TREE_FACTOR);
+        var trees = Math.round(co2Kg / CONFIG.TREE_FACTOR);
         document.getElementById('trees').textContent = trees.toLocaleString('it-IT');
 
-        const isProducing = powerW > 10;
-        const dot = document.getElementById('statusDot');
-        const txt = document.getElementById('statusText');
+        var isProducing = powerW > 10;
+        var dot = document.getElementById('statusDot');
+        var txt = document.getElementById('statusText');
         if (isProducing) {
-            dot.style.background = '#00d4aa';
+            dot.style.background = '#00a651';
+            dot.style.boxShadow = '0 0 15px #00a651';
             txt.textContent = 'Produzione Attiva';
-            txt.style.color = '#00d4aa';
+            txt.style.color = '#00a651';
         } else {
             dot.style.background = '#e74c3c';
+            dot.style.boxShadow = '0 0 15px #e74c3c';
             txt.textContent = 'In Standby / Notte';
             txt.style.color = '#e74c3c';
         }
 
-        const now = new Date();
-        document.getElementById('lastUpdate').textContent = now.toLocaleString('it-IT', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'});
+        var now = new Date();
+        document.getElementById('lastUpdate').textContent = now.toLocaleString('it-IT', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
 
         await updateChart();
         document.getElementById('loading').classList.add('hidden');
@@ -124,25 +505,30 @@ async function updateDashboard() {
     }
 }
 
+// Grafico
 async function updateChart() {
     try {
-        const today = new Date().toISOString().split('T')[0];
-        const data = await apiCall('energy', {timeUnit: 'QUARTER_OF_AN_HOUR', startDate: today, endDate: today});
+        var today = new Date().toISOString().split('T')[0];
+        var data = await apiCall('energy', {
+            timeUnit: 'QUARTER_OF_AN_HOUR',
+            startDate: today,
+            endDate: today
+        });
         
-        const values = (data.energy && data.energy.values) || [];
-        const hourly = new Array(24).fill(0);
-        const counts = new Array(24).fill(0);
+        var values = (data.energy && data.energy.values) || [];
+        var hourly = new Array(24).fill(0);
+        var counts = new Array(24).fill(0);
         
-        for (let i = 0; i < values.length; i++) {
-            const v = values[i];
+        for (var i = 0; i < values.length; i++) {
+            var v = values[i];
             if (!v.value) continue;
-            const h = new Date(v.date).getHours();
+            var h = new Date(v.date).getHours();
             hourly[h] += v.value;
             counts[h]++;
         }
         
-        const chartData = [];
-        for (let i = 0; i < 24; i++) {
+        var chartData = [];
+        for (var i = 0; i < 24; i++) {
             chartData.push(counts[i] > 0 ? (hourly[i] / counts[i] / 1000).toFixed(2) : 0);
         }
         renderChart(chartData);
@@ -154,30 +540,30 @@ async function updateChart() {
 }
 
 function renderChart(data) {
-    const svg = document.getElementById('chartSvg');
-    const w = 1200, h = 300;
-    const pad = {top: 20, right: 30, bottom: 40, left: 60};
-    const chartW = w - pad.left - pad.right;
-    const chartH = h - pad.top - pad.bottom;
-    const max = Math.max.apply(null, data.concat([1]));
-    const barW = (chartW / 24) * 0.7;
-    const gap = (chartW / 24) * 0.3;
+    var svg = document.getElementById('chartSvg');
+    var w = 1200, h = 300;
+    var pad = {top: 20, right: 30, bottom: 40, left: 60};
+    var chartW = w - pad.left - pad.right;
+    var chartH = h - pad.top - pad.bottom;
+    var max = Math.max.apply(null, data.concat([1]));
+    var barW = (chartW / 24) * 0.7;
+    var gap = (chartW / 24) * 0.3;
 
-    let html = '';
-    for (let i = 0; i <= 5; i++) {
-        const y = pad.top + (chartH * i / 5);
-        const val = (max * (5-i) / 5).toFixed(1);
+    var html = '';
+    for (var i = 0; i <= 5; i++) {
+        var y = pad.top + (chartH * i / 5);
+        var val = (max * (5-i) / 5).toFixed(1);
         html += '<line x1="' + pad.left + '" y1="' + y + '" x2="' + (w-pad.right) + '" y2="' + y + '" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="4,4"/>';
         html += '<text x="' + (pad.left-10) + '" y="' + (y+4) + '" text-anchor="end" fill="#556677" font-size="12" font-family="Segoe UI">' + val + '</text>';
     }
 
-    for (let i = 0; i < data.length; i++) {
-        const val = parseFloat(data[i]);
-        const barH = (val / max) * chartH;
-        const x = pad.left + (i * (barW + gap)) + gap/2;
-        const y = pad.top + chartH - barH;
-        const intensity = val / max;
-        const color = intensity > 0.7 ? '#00d4aa' : intensity > 0.3 ? '#00a8e8' : '#1e3a5f';
+    for (var i = 0; i < data.length; i++) {
+        var val = parseFloat(data[i]);
+        var barH = (val / max) * chartH;
+        var x = pad.left + (i * (barW + gap)) + gap/2;
+        var y = pad.top + chartH - barH;
+        var intensity = val / max;
+        var color = intensity > 0.7 ? '#00a651' : intensity > 0.3 ? '#7ed957' : '#1e3a5f';
         html += '<rect x="' + x + '" y="' + y + '" width="' + barW + '" height="' + barH + '" fill="' + color + '" rx="3"/>';
         if (i % 3 === 0) {
             html += '<text x="' + (x + barW/2) + '" y="' + (h-10) + '" text-anchor="middle" fill="#556677" font-size="12" font-family="Segoe UI">' + i + ':00</text>';
@@ -187,7 +573,9 @@ function renderChart(data) {
 }
 
 // Avvio
+getWeather();
 updateDashboard();
+setInterval(getWeather, 600000);
 setInterval(updateDashboard, CONFIG.REFRESH_MS);
 setTimeout(function() { location.reload(); }, 3600000);
 </script>
