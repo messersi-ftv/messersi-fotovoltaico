@@ -388,11 +388,15 @@
         }
 
         async function updateDashboard() {
-            try {
-                const overview = await apiCall('overview');
-                const site = overview.overview;
+    try {
+        const overview = await apiCall('overview');
+        const site = overview.siteOverviews?.siteEnergyList?.[0]?.siteOverview;
 
-                const powerW = site.currentPower?.power || 0;
+        if (!site) {
+            throw new Error('Dati sito non trovati nella risposta API');
+        }
+
+        const powerW = site.currentPower?.power || 0;
                 const powerKW = (powerW / 1000).toFixed(1);
                 document.getElementById('currentPower').textContent = powerKW;
                 
