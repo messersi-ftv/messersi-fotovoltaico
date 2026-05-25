@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     }
 
     const { endpoint, timeUnit, startDate, endDate } = req.query;
-    const API_KEY = 'R32EGC7MEDO2B47EAS4S59NM5EEM1RYX';
+    const API_KEY = 'DV71FTR8PW46BHEMV6CH5GS67IQFT1CF';
     const SITE_ID = '4858098';
     
     let url = `https://monitoringapi.solaredge.com/sites/${SITE_ID}/${endpoint}?api_key=${API_KEY}`;
