@@ -388,15 +388,16 @@
         }
 
         async function updateDashboard() {
-    try {
-        const overview = await apiCall('overview');
-        const site = overview.siteOverviews?.siteEnergyList?.[0]?.siteOverview;
+            try {
+                const overview = await apiCall('overview');
+                const site = overview.siteOverviews?.siteEnergyList?.[0]?.siteOverview;
 
-        if (!site) {
-            throw new Error('Dati sito non trovati nella risposta API');
-        }
+                if (!site) {
+                    console.error('Risposta API:', overview);
+                    throw new Error('Struttura dati non riconosciuta');
+                }
 
-        const powerW = site.currentPower?.power || 0;
+                const powerW = site.currentPower?.power || 0;
                 const powerKW = (powerW / 1000).toFixed(1);
                 document.getElementById('currentPower').textContent = powerKW;
                 
@@ -448,6 +449,7 @@
 
             } catch (e) {
                 console.error('Update error:', e);
+                showError(`Errore: ${e.message}`);
             }
         }
 
