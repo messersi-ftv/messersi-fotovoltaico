@@ -20,7 +20,7 @@
         /* HEADER */
         .header {
             background: linear-gradient(90deg, #0d2137 0%, #1a3a2a 100%);
-            padding: 20px 50px;
+            padding: 15px 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -31,53 +31,53 @@
             flex-direction: column;
         }
         .header-left h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 300;
             letter-spacing: 2px;
             color: #ffffff;
         }
         .header-left .subtitle {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: #7ed957;
             font-weight: 500;
-            margin-top: 5px;
+            margin-top: 3px;
         }
         .header-right {
             display: flex;
             align-items: center;
-            gap: 30px;
+            gap: 25px;
         }
         
-        /* WIDGET METEO */
+        /* WIDGET METEO AMPLIATO */
         .weather-widget {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
             background: rgba(0, 166, 81, 0.15);
-            border: 1px solid #00a651;
-            border-radius: 16px;
-            padding: 12px 20px;
+            border: 2px solid #00a651;
+            border-radius: 20px;
+            padding: 18px 28px;
         }
         .weather-icon {
-            font-size: 2.5rem;
+            font-size: 3.5rem;
         }
         .weather-info {
             display: flex;
             flex-direction: column;
         }
         .weather-temp {
-            font-size: 1.6rem;
+            font-size: 2rem;
             font-weight: 700;
             color: #7ed957;
         }
         .weather-desc {
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             color: #8899aa;
         }
         .weather-details {
-            font-size: 0.8rem;
+            font-size: 0.95rem;
             color: #556677;
-            margin-top: 4px;
+            margin-top: 6px;
         }
         
         /* STATUS */
@@ -85,7 +85,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 500;
         }
         .status-dot {
@@ -96,30 +96,25 @@
             box-shadow: 0 0 15px #00a651;
             animation: pulse 2.5s infinite;
         }
-        .status-dot.offline {
-            background: #e74c3c;
-            box-shadow: 0 0 15px #e74c3c;
-            animation: none;
-        }
         @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(0.85); }
         }
 
-        /* MAIN */
+        /* MAIN - GRID RICONFIGURATO */
         .main {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1.2fr 0.8fr;
-            gap: 25px;
-            padding: 25px 50px;
+            grid-template-rows: 1.4fr 0.6fr;
+            gap: 20px;
+            padding: 20px 50px;
         }
 
         /* CARDS */
         .card {
             background: linear-gradient(145deg, #132238 0%, #1a2d4a 100%);
             border-radius: 24px;
-            padding: 35px;
+            padding: 30px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -137,72 +132,94 @@
         }
 
         .card-label {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: #8899aa;
             text-transform: uppercase;
             letter-spacing: 4px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card-icon {
+            font-size: 2.2rem;
         }
         .card-value {
             font-size: 6rem;
             font-weight: 800;
             line-height: 1;
-            text-shadow: 0 0 30px rgba(0, 166, 81, 0.3);
         }
         .card-unit {
             font-size: 2rem;
             color: #8899aa;
-            margin-top: 12px;
+            margin-top: 10px;
         }
         .card-sub {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #556677;
-            margin-top: 18px;
+            margin-top: 15px;
         }
 
+        /* POTENZA ISTANTANEA - ARANCIO */
         .power-card .card-value { 
-            color: #00a651; 
+            color: #ff6b35; 
             font-size: 7rem;
-            text-shadow: 0 0 40px rgba(0, 166, 81, 0.4);
+            text-shadow: 0 0 40px rgba(255, 107, 53, 0.4);
         }
+        .power-card::before {
+            background: linear-gradient(90deg, #ff6b35, #ff9f43);
+        }
+
         .energy-today .card-value { color: #7ed957; }
+        .energy-today::before {
+            background: linear-gradient(90deg, #00a651, #7ed957);
+        }
+
         .energy-total .card-value { color: #2e8b9b; }
+        .energy-total::before {
+            background: linear-gradient(90deg, #2e8b9b, #5bc0de);
+        }
+
         .co2-card .card-value { 
             color: #7ed957; 
             font-size: 5rem;
         }
+        .co2-card::before {
+            background: linear-gradient(90deg, #00a651, #7ed957);
+        }
 
-        /* CHART */
+        /* CHART - RIDOTTO */
         .chart-card {
             grid-column: 1 / -1;
-            padding: 20px 35px;
+            padding: 15px 30px;
+            min-height: 0;
         }
         .chart-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         .chart-title {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             color: #8899aa;
             text-transform: uppercase;
             letter-spacing: 3px;
         }
         .chart-svg {
             width: 100%;
-            height: calc(100% - 60px);
+            height: 180px;
         }
 
         /* FOOTER */
         .footer {
             background: #0d2137;
-            padding: 15px 50px;
+            padding: 12px 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #556677;
             border-top: 1px solid #1e3a5f;
         }
@@ -218,7 +235,7 @@
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         .update-dot {
             width: 8px;
@@ -252,7 +269,7 @@
             width: 80px; 
             height: 80px;
             border: 5px solid #1e3a5f;
-            border-top-color: #00a651;
+            border-top-color: #ff6b35;
             border-radius: 50%;
             animation: spin 1.2s linear infinite;
         }
@@ -299,7 +316,7 @@
             <div class="subtitle">Via Primo Maggio 8 - Barbara (AN) Italy | Impianto Fotovoltaico 600 kWp</div>
         </div>
         <div class="header-right">
-            <!-- WIDGET METEO -->
+            <!-- WIDGET METEO AMPLIATO -->
             <div class="weather-widget" id="weatherWidget">
                 <div class="weather-icon" id="weatherIcon">🌡️</div>
                 <div class="weather-info">
@@ -319,28 +336,40 @@
     <!-- MAIN -->
     <main class="main">
         <div class="card power-card">
-            <div class="card-label">⚡ Potenza Attuale</div>
+            <div class="card-label">
+                <span class="card-icon">⚡</span>
+                Potenza Attuale
+            </div>
             <div class="card-value" id="currentPower">--</div>
             <div class="card-unit">kW</div>
             <div class="card-sub" id="powerPerc">--% potenza nominale</div>
         </div>
 
         <div class="card energy-today">
-            <div class="card-label">📅 Energia Oggi</div>
+            <div class="card-label">
+                <span class="card-icon">📅</span>
+                Energia Oggi
+            </div>
             <div class="card-value" id="energyToday">--</div>
             <div class="card-unit">kWh</div>
             <div class="card-sub" id="energyTodayMWh">-- MWh</div>
         </div>
 
         <div class="card energy-total">
-            <div class="card-label">🏆 Energia Totale</div>
+            <div class="card-label">
+                <span class="card-icon">🏆</span>
+                Energia Totale
+            </div>
             <div class="card-value" id="energyTotal">--</div>
             <div class="card-unit">MWh</div>
             <div class="card-sub" id="energyTotalGWh">-- GWh totali</div>
         </div>
 
         <div class="card co2-card">
-            <div class="card-label">🌱 CO₂ Risparmiata</div>
+            <div class="card-label">
+                <span class="card-icon">🌱</span>
+                CO₂ Risparmiata
+            </div>
             <div class="card-value" id="co2Saved">--</div>
             <div class="card-unit">kg</div>
             <div class="card-sub">≈ <span id="trees">--</span> alberi equivalenti</div>
@@ -350,7 +379,7 @@
             <div class="chart-header">
                 <div class="chart-title">Produzione Oraria - Oggi</div>
             </div>
-            <svg class="chart-svg" id="chartSvg" viewBox="0 0 1200 300" preserveAspectRatio="none"></svg>
+            <svg class="chart-svg" id="chartSvg" viewBox="0 0 1200 180" preserveAspectRatio="none"></svg>
         </div>
     </main>
 
@@ -387,7 +416,7 @@ async function apiCall(endpoint, params) {
     return await res.json();
 }
 
-// API Meteo Open-Meteo (gratuita, no API key)
+// API Meteo
 async function getWeather() {
     try {
         var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + CONFIG.WEATHER_LAT + 
@@ -404,7 +433,6 @@ async function getWeather() {
         var wind = current.wind_speed_10m;
         var code = current.weather_code;
         
-        // Icone WMO
         var icons = {
             0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
             45: '🌫️', 48: '🌫️',
@@ -436,20 +464,16 @@ async function getWeather() {
     }
 }
 
-// Dashboard SolarEdge
+// Dashboard
 async function updateDashboard() {
     try {
         var data = await apiCall('overview');
         console.log('API response:', data);
         
         var siteList = data.sitesOverviews && data.sitesOverviews.siteEnergyList;
-        if (!siteList || !siteList[0]) {
-            throw new Error('Dati sito non trovati');
-        }
+        if (!siteList || !siteList[0]) throw new Error('Dati sito non trovati');
         var site = siteList[0].siteOverview;
-        if (!site) {
-            throw new Error('siteOverview mancante');
-        }
+        if (!site) throw new Error('siteOverview mancante');
 
         var powerW = (site.currentPower && site.currentPower.power) || 0;
         var powerKW = (powerW / 1000).toFixed(1);
@@ -541,8 +565,8 @@ async function updateChart() {
 
 function renderChart(data) {
     var svg = document.getElementById('chartSvg');
-    var w = 1200, h = 300;
-    var pad = {top: 20, right: 30, bottom: 40, left: 60};
+    var w = 1200, h = 180;
+    var pad = {top: 15, right: 30, bottom: 30, left: 60};
     var chartW = w - pad.left - pad.right;
     var chartH = h - pad.top - pad.bottom;
     var max = Math.max.apply(null, data.concat([1]));
@@ -563,10 +587,10 @@ function renderChart(data) {
         var x = pad.left + (i * (barW + gap)) + gap/2;
         var y = pad.top + chartH - barH;
         var intensity = val / max;
-        var color = intensity > 0.7 ? '#00a651' : intensity > 0.3 ? '#7ed957' : '#1e3a5f';
+        var color = intensity > 0.7 ? '#ff6b35' : intensity > 0.3 ? '#7ed957' : '#1e3a5f';
         html += '<rect x="' + x + '" y="' + y + '" width="' + barW + '" height="' + barH + '" fill="' + color + '" rx="3"/>';
         if (i % 3 === 0) {
-            html += '<text x="' + (x + barW/2) + '" y="' + (h-10) + '" text-anchor="middle" fill="#556677" font-size="12" font-family="Segoe UI">' + i + ':00</text>';
+            html += '<text x="' + (x + barW/2) + '" y="' + (h-8) + '" text-anchor="middle" fill="#556677" font-size="12" font-family="Segoe UI">' + i + ':00</text>';
         }
     }
     svg.innerHTML = html;
