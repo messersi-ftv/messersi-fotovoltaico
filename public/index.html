@@ -42,85 +42,89 @@
             font-weight: 500;
             margin-top: 3px;
         }
+        
+        /* CENTRO - WIDGET ORA + METEO SIMMETRICI */
         .header-center {
             display: flex;
             align-items: center;
-            gap: 25px;
+            justify-content: center;
+            gap: 30px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
-        /* OROLOGIO - CENTRALE, GRANDE, BLU */
+        /* WIDGET ORA - STESSO STILE METEO */
         .clock-widget {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            background: rgba(46, 139, 155, 0.15);
-            border: 3px solid #2e8b9b;
-            border-radius: 24px;
-            padding: 15px 35px;
-            min-width: 200px;
-        }
-        .clock-main {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-        }
-        .clock-time {
-            font-size: 5rem;
-            font-weight: 800;
-            color: #2e8b9b;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: 2px;
-            line-height: 1;
-            text-shadow: 0 0 30px rgba(46, 139, 155, 0.4);
-        }
-        .clock-date {
-            font-size: 1.5rem;
-            color: #5bc0de;
-            font-weight: 500;
-        }
-        .clock-label {
-            font-size: 0.85rem;
-            color: #8899aa;
-            margin-top: 5px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
-        
-        /* METEO - INGRANDITO 2x */
-        .weather-widget {
-            display: flex;
-            align-items: center;
-            gap: 25px;
+            gap: 15px;
             background: rgba(0, 166, 81, 0.15);
             border: 3px solid #00a651;
             border-radius: 24px;
-            padding: 20px 35px;
-            min-height: 120px;
+            padding: 18px 30px;
+            min-width: 220px;
+            min-height: 100px;
+        }
+        .clock-icon {
+            font-size: 3.5rem;
+        }
+        .clock-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .clock-time {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #7ed957;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+        .clock-date {
+            font-size: 1.2rem;
+            color: #5bc0de;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        
+        /* WIDGET METEO - IDENTICO */
+        .weather-widget {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 166, 81, 0.15);
+            border: 3px solid #00a651;
+            border-radius: 24px;
+            padding: 18px 30px;
+            min-width: 220px;
+            min-height: 100px;
         }
         .weather-icon {
-            font-size: 5rem;
+            font-size: 3.5rem;
         }
         .weather-info {
             display: flex;
             flex-direction: column;
         }
         .weather-temp {
-            font-size: 3rem;
+            font-size: 2.8rem;
             font-weight: 700;
             color: #7ed957;
+            line-height: 1;
         }
         .weather-desc {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: #8899aa;
+            margin-top: 4px;
         }
         .weather-details {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: #556677;
-            margin-top: 8px;
+            margin-top: 6px;
         }
         
-        /* STATUS - CON CORNICE ROUNDED */
+        /* STATUS CON CORNICE */
         .status {
             display: flex;
             align-items: center;
@@ -139,11 +143,6 @@
             background: #00a651;
             box-shadow: 0 0 15px #00a651;
             animation: pulse 2.5s infinite;
-        }
-        .status-dot.offline {
-            background: #e74c3c;
-            box-shadow: 0 0 15px #e74c3c;
-            animation: none;
         }
         @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
@@ -369,18 +368,18 @@
             <div class="subtitle">Via Primo Maggio 8 - Barbara (AN) Italy | Impianto Fotovoltaico 600 kWp</div>
         </div>
         
-        <!-- CENTRO: OROLOGIO + METEO -->
+        <!-- CENTRO: ORA + METEO SIMMETRICI -->
         <div class="header-center">
             <!-- OROLOGIO -->
             <div class="clock-widget" id="clockWidget">
-                <div class="clock-main">
+                <div class="clock-icon">🕐</div>
+                <div class="clock-info">
                     <div class="clock-time" id="clockTime">--:--</div>
                     <div class="clock-date" id="clockDate">--/--</div>
                 </div>
-                <div class="clock-label">Ora locale</div>
             </div>
             
-            <!-- METEO INGRANDITO -->
+            <!-- METEO -->
             <div class="weather-widget" id="weatherWidget">
                 <div class="weather-icon" id="weatherIcon">🌡️</div>
                 <div class="weather-info">
@@ -391,7 +390,7 @@
             </div>
         </div>
         
-        <!-- STATUS CON CORNICE -->
+        <!-- STATUS -->
         <div class="status">
             <div class="status-dot" id="statusDot"></div>
             <span id="statusText">Connessione...</span>
@@ -615,7 +614,7 @@ async function updateDashboard() {
     }
 }
 
-// GRAFICO SOLO FINO ALL'ORA CORRENTE
+// GRAFICO
 async function updateChart() {
     try {
         var now = new Date();
