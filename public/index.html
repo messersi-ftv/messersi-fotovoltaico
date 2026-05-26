@@ -42,84 +42,108 @@
             font-weight: 500;
             margin-top: 3px;
         }
-        .header-right {
+        .header-center {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 25px;
         }
         
-        /* OROLOGIO */
+        /* OROLOGIO - CENTRALE, GRANDE, BLU */
         .clock-widget {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 107, 53, 0.15);
-            border: 2px solid #ff6b35;
-            border-radius: 20px;
-            padding: 12px 24px;
-            min-width: 120px;
+            background: rgba(46, 139, 155, 0.15);
+            border: 3px solid #2e8b9b;
+            border-radius: 24px;
+            padding: 15px 35px;
+            min-width: 200px;
+        }
+        .clock-main {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
         }
         .clock-time {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #ff6b35;
+            font-size: 5rem;
+            font-weight: 800;
+            color: #2e8b9b;
             font-variant-numeric: tabular-nums;
             letter-spacing: 2px;
+            line-height: 1;
+            text-shadow: 0 0 30px rgba(46, 139, 155, 0.4);
         }
         .clock-date {
+            font-size: 1.5rem;
+            color: #5bc0de;
+            font-weight: 500;
+        }
+        .clock-label {
             font-size: 0.85rem;
             color: #8899aa;
-            margin-top: 4px;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
         }
         
-        /* WIDGET METEO */
+        /* METEO - INGRANDITO 2x */
         .weather-widget {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 25px;
             background: rgba(0, 166, 81, 0.15);
-            border: 2px solid #00a651;
-            border-radius: 20px;
-            padding: 18px 28px;
+            border: 3px solid #00a651;
+            border-radius: 24px;
+            padding: 20px 35px;
+            min-height: 120px;
         }
         .weather-icon {
-            font-size: 3.5rem;
+            font-size: 5rem;
         }
         .weather-info {
             display: flex;
             flex-direction: column;
         }
         .weather-temp {
-            font-size: 2rem;
+            font-size: 3rem;
             font-weight: 700;
             color: #7ed957;
         }
         .weather-desc {
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             color: #8899aa;
         }
         .weather-details {
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             color: #556677;
-            margin-top: 6px;
+            margin-top: 8px;
         }
         
-        /* STATUS */
+        /* STATUS - CON CORNICE ROUNDED */
         .status {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 1.1rem;
+            gap: 12px;
+            font-size: 1.2rem;
             font-weight: 500;
+            background: rgba(0, 166, 81, 0.1);
+            border: 2px solid #00a651;
+            border-radius: 20px;
+            padding: 12px 20px;
         }
         .status-dot {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: #00a651;
             box-shadow: 0 0 15px #00a651;
             animation: pulse 2.5s infinite;
+        }
+        .status-dot.offline {
+            background: #e74c3c;
+            box-shadow: 0 0 15px #e74c3c;
+            animation: none;
         }
         @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
@@ -344,13 +368,19 @@
             <h1>MESSERSÌ PACKAGING</h1>
             <div class="subtitle">Via Primo Maggio 8 - Barbara (AN) Italy | Impianto Fotovoltaico 600 kWp</div>
         </div>
-        <div class="header-right">
+        
+        <!-- CENTRO: OROLOGIO + METEO -->
+        <div class="header-center">
             <!-- OROLOGIO -->
             <div class="clock-widget" id="clockWidget">
-                <div class="clock-time" id="clockTime">--:--</div>
-                <div class="clock-date" id="clockDate">--/--/----</div>
+                <div class="clock-main">
+                    <div class="clock-time" id="clockTime">--:--</div>
+                    <div class="clock-date" id="clockDate">--/--</div>
+                </div>
+                <div class="clock-label">Ora locale</div>
             </div>
-            <!-- METEO -->
+            
+            <!-- METEO INGRANDITO -->
             <div class="weather-widget" id="weatherWidget">
                 <div class="weather-icon" id="weatherIcon">🌡️</div>
                 <div class="weather-info">
@@ -359,11 +389,12 @@
                     <div class="weather-details" id="weatherDetails">--</div>
                 </div>
             </div>
-            <!-- STATUS -->
-            <div class="status">
-                <div class="status-dot" id="statusDot"></div>
-                <span id="statusText">Connessione...</span>
-            </div>
+        </div>
+        
+        <!-- STATUS CON CORNICE -->
+        <div class="status">
+            <div class="status-dot" id="statusDot"></div>
+            <span id="statusText">Connessione...</span>
         </div>
     </header>
 
@@ -412,7 +443,7 @@
         <div class="card chart-card">
             <div class="chart-header">
                 <div class="chart-title">Produzione Oraria - Oggi</div>
-                <div class="chart-current-hour" id="chartCurrentHour">Aggiornato alle --:--</div>
+                <div class="chart-current-hour" id="chartCurrentHour">Dati fino alle --:--</div>
             </div>
             <svg class="chart-svg" id="chartSvg" viewBox="0 0 1200 280" preserveAspectRatio="none"></svg>
         </div>
@@ -447,10 +478,9 @@ function updateClock() {
     var minutes = String(now.getMinutes()).padStart(2, '0');
     var day = String(now.getDate()).padStart(2, '0');
     var month = String(now.getMonth() + 1).padStart(2, '0');
-    var year = now.getFullYear();
     
     document.getElementById('clockTime').textContent = hours + ':' + minutes;
-    document.getElementById('clockDate').textContent = day + '/' + month + '/' + year;
+    document.getElementById('clockDate').textContent = day + '/' + month;
 }
 updateClock();
 setInterval(updateClock, 1000);
@@ -551,16 +581,22 @@ async function updateDashboard() {
         var isProducing = powerW > 10;
         var dot = document.getElementById('statusDot');
         var txt = document.getElementById('statusText');
+        var statusDiv = dot.parentElement;
+        
         if (isProducing) {
             dot.style.background = '#00a651';
             dot.style.boxShadow = '0 0 15px #00a651';
             txt.textContent = 'Produzione Attiva';
             txt.style.color = '#00a651';
+            statusDiv.style.borderColor = '#00a651';
+            statusDiv.style.background = 'rgba(0, 166, 81, 0.1)';
         } else {
             dot.style.background = '#e74c3c';
             dot.style.boxShadow = '0 0 15px #e74c3c';
             txt.textContent = 'In Standby / Notte';
             txt.style.color = '#e74c3c';
+            statusDiv.style.borderColor = '#e74c3c';
+            statusDiv.style.background = 'rgba(231, 76, 60, 0.1)';
         }
 
         var now = new Date();
@@ -586,24 +622,17 @@ async function updateChart() {
         var currentHour = now.getHours();
         var today = now.toISOString().split('T')[0];
         
-        console.log('Chart - current hour:', currentHour);
-        
         var data = await apiCall('energy', {
             timeUnit: 'HOUR',
             startDate: today,
             endDate: today
         });
         
-        console.log('Chart - API response:', data);
-        
         var values = [];
         if (data.energy && data.energy.values) {
             values = data.energy.values;
         }
         
-        console.log('Chart - values:', values.length);
-        
-        // Filtra solo le ore passate (fino all'ora corrente)
         var hourly = new Array(24).fill(0);
         var hasRealData = false;
         
@@ -614,35 +643,28 @@ async function updateChart() {
             var dateObj = v.date ? new Date(v.date) : null;
             var h = dateObj ? dateObj.getHours() : i;
             
-            // Solo se l'ora è <= ora corrente
             if (h <= currentHour) {
                 hourly[h] = parseFloat(v.value);
                 if (v.value > 0) hasRealData = true;
             }
         }
         
-        // Se non ci sono dati reali, usa demo per test
         if (!hasRealData) {
-            console.log('Chart - using demo data');
             var demoValues = [0,0,0,0,0,0, 15,45,85,120,150,180,200,210,220,230,220,200,150,80,30,5,0,0];
             for (var i = 0; i <= currentHour && i < 24; i++) {
-                hourly[i] = demoValues[i] * 1000; // in Wh
+                hourly[i] = demoValues[i] * 1000;
             }
         }
         
-        // Converti in kWh
         var chartData = [];
         for (var i = 0; i < 24; i++) {
             if (i <= currentHour) {
                 chartData.push((hourly[i] / 1000).toFixed(2));
             } else {
-                chartData.push(0); // Ore future = 0
+                chartData.push(0);
             }
         }
         
-        console.log('Chart - final data (first ' + (currentHour + 1) + ' hours):', chartData.slice(0, currentHour + 1));
-        
-        // Aggiorna testo "Aggiornato alle"
         var hours = String(currentHour).padStart(2, '0');
         var minutes = String(now.getMinutes()).padStart(2, '0');
         document.getElementById('chartCurrentHour').textContent = 'Dati fino alle ' + hours + ':' + minutes;
@@ -668,7 +690,6 @@ function renderChart(data, currentHour) {
 
     var html = '';
     
-    // Griglia
     for (var i = 0; i <= 5; i++) {
         var y = pad.top + (chartH * i / 5);
         var val = (max * (5-i) / 5).toFixed(1);
@@ -676,7 +697,6 @@ function renderChart(data, currentHour) {
         html += '<text x="' + (pad.left-10) + '" y="' + (y+4) + '" text-anchor="end" fill="#556677" font-size="12" font-family="Segoe UI">' + val + '</text>';
     }
 
-    // Barre - solo fino all'ora corrente, poi grigio/trasparente
     for (var i = 0; i < data.length; i++) {
         var val = parseFloat(data[i]);
         var barH = (val / max) * chartH;
@@ -684,11 +704,10 @@ function renderChart(data, currentHour) {
         var y = pad.top + chartH - barH;
         var intensity = val / max;
         
-        // Colore: arancio per picco, verde per medio, grigio per ore future
         var color;
         if (i > currentHour) {
-            color = '#1e3a5f'; // Ore future = grigio scuro (invisibile praticamente)
-            barH = 1; // Barra minima
+            color = '#1e3a5f';
+            barH = 1;
             y = pad.top + chartH - 1;
         } else if (intensity > 0.7) {
             color = '#ff6b35';
@@ -700,13 +719,11 @@ function renderChart(data, currentHour) {
         
         html += '<rect x="' + x + '" y="' + y + '" width="' + barW + '" height="' + Math.max(barH, 1) + '" fill="' + color + '" rx="3"/>';
         
-        // Label ore ogni 3 ore, solo fino all'ora corrente + 1
         if (i % 3 === 0 && i <= currentHour + 3) {
             html += '<text x="' + (x + barW/2) + '" y="' + (h-8) + '" text-anchor="middle" fill="#556677" font-size="12" font-family="Segoe UI">' + i + ':00</text>';
         }
     }
     
-    // Linea verticale indicatore "ora corrente"
     if (currentHour < 23) {
         var currentX = pad.left + (currentHour * (barW + gap)) + gap/2 + barW;
         html += '<line x1="' + currentX + '" y1="' + pad.top + '" x2="' + currentX + '" y2="' + (pad.top + chartH) + '" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5,5"/>';
