@@ -20,7 +20,7 @@
         /* HEADER */
         .header {
             background: linear-gradient(90deg, #0d2137 0%, #1a3a2a 100%);
-            padding: 15px 50px;
+            padding: 12px 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -31,50 +31,45 @@
             flex-direction: column;
         }
         .header-left h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 300;
             letter-spacing: 2px;
             color: #ffffff;
         }
         .header-left .subtitle {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #7ed957;
             font-weight: 500;
-            margin-top: 3px;
+            margin-top: 2px;
         }
         
-        /* CENTRO - WIDGET ORA + METEO SIMMETRICI */
+        /* CENTRO - WIDGET ORA + METEO SENZA CONTORNO */
         .header-center {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 30px;
+            gap: 25px;
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
         }
         
-        /* WIDGET ORA - STESSO STILE METEO */
+        /* WIDGET ORA - SENZA BORDO */
         .clock-widget {
             display: flex;
             align-items: center;
-            gap: 15px;
-            background: rgba(0, 166, 81, 0.15);
-            border: 3px solid #00a651;
-            border-radius: 24px;
-            padding: 18px 30px;
-            min-width: 220px;
-            min-height: 100px;
+            gap: 12px;
+            padding: 10px 20px;
         }
         .clock-icon {
-            font-size: 3.5rem;
+            font-size: 3rem;
         }
         .clock-info {
             display: flex;
             flex-direction: column;
         }
         .clock-time {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: 700;
             color: #7ed957;
             font-variant-numeric: tabular-nums;
@@ -83,62 +78,57 @@
         }
         .clock-date {
             font-size: 1.2rem;
-            color: #5bc0de;
+            color: #7ed957;
             font-weight: 500;
-            margin-top: 4px;
+            margin-top: 2px;
         }
         
-        /* WIDGET METEO - IDENTICO */
+        /* WIDGET METEO - SENZA BORDO */
         .weather-widget {
             display: flex;
             align-items: center;
-            gap: 15px;
-            background: rgba(0, 166, 81, 0.15);
-            border: 3px solid #00a651;
-            border-radius: 24px;
-            padding: 18px 30px;
-            min-width: 220px;
-            min-height: 100px;
+            gap: 12px;
+            padding: 10px 20px;
         }
         .weather-icon {
-            font-size: 3.5rem;
+            font-size: 3rem;
         }
         .weather-info {
             display: flex;
             flex-direction: column;
         }
         .weather-temp {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: 700;
             color: #7ed957;
             line-height: 1;
         }
         .weather-desc {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #8899aa;
-            margin-top: 4px;
+            margin-top: 2px;
         }
         .weather-details {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: #556677;
-            margin-top: 6px;
+            margin-top: 4px;
         }
         
         /* STATUS CON CORNICE */
         .status {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 1.2rem;
+            gap: 10px;
+            font-size: 1.1rem;
             font-weight: 500;
             background: rgba(0, 166, 81, 0.1);
             border: 2px solid #00a651;
             border-radius: 20px;
-            padding: 12px 20px;
+            padding: 10px 18px;
         }
         .status-dot {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             background: #00a651;
             box-shadow: 0 0 15px #00a651;
@@ -149,20 +139,20 @@
             50% { opacity: 0.5; transform: scale(0.85); }
         }
 
-        /* MAIN */
+        /* MAIN - GRID RICONFIGURATO */
         .main {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: 0.75fr 0.75fr 1.5fr;
-            gap: 20px;
-            padding: 20px 50px;
+            grid-template-rows: 0.8fr 0.8fr 1.4fr;
+            gap: 15px;
+            padding: 15px 50px;
         }
 
         /* CARDS */
         .card {
             background: linear-gradient(145deg, #132238 0%, #1a2d4a 100%);
-            border-radius: 24px;
-            padding: 20px 30px;
+            border-radius: 20px;
+            padding: 18px 25px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -175,42 +165,42 @@
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 5px;
+            height: 4px;
             background: linear-gradient(90deg, #00a651, #7ed957);
         }
 
         .card-label {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #8899aa;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            margin-bottom: 10px;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
         .card-icon {
-            font-size: 2.2rem;
+            font-size: 2rem;
         }
         .card-value {
-            font-size: 5rem;
+            font-size: 4.5rem;
             font-weight: 800;
             line-height: 1;
         }
         .card-unit {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             color: #8899aa;
-            margin-top: 8px;
+            margin-top: 6px;
         }
         .card-sub {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #556677;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .power-card .card-value { 
             color: #ff6b35; 
-            font-size: 5.5rem;
+            font-size: 5rem;
             text-shadow: 0 0 40px rgba(255, 107, 53, 0.4);
         }
         .power-card::before {
@@ -229,49 +219,53 @@
 
         .co2-card .card-value { 
             color: #7ed957; 
-            font-size: 4rem;
+            font-size: 3.5rem;
         }
         .co2-card::before {
             background: linear-gradient(90deg, #00a651, #7ed957);
         }
 
-        /* CHART */
+        /* CHART - COMPATTO, SENZA SPAZIO VUOTO */
         .chart-card {
             grid-column: 1 / -1;
-            padding: 20px 30px;
+            padding: 12px 25px 8px 25px;
             min-height: 0;
+            display: flex;
+            flex-direction: column;
         }
         .chart-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
+            flex-shrink: 0;
         }
         .chart-title {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #8899aa;
             text-transform: uppercase;
             letter-spacing: 3px;
         }
         .chart-current-hour {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: #ff6b35;
             font-weight: 500;
         }
         .chart-svg {
             width: 100%;
-            height: 280px;
+            flex: 1;
+            min-height: 0;
         }
 
         /* FOOTER */
         .footer {
             background: #0d2137;
-            padding: 12px 50px;
+            padding: 10px 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #556677;
             border-top: 1px solid #1e3a5f;
         }
@@ -287,7 +281,7 @@
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .update-dot {
             width: 8px;
@@ -368,9 +362,8 @@
             <div class="subtitle">Via Primo Maggio 8 - Barbara (AN) Italy | Impianto Fotovoltaico 600 kWp</div>
         </div>
         
-        <!-- CENTRO: ORA + METEO SIMMETRICI -->
+        <!-- CENTRO: ORA + METEO SENZA CONTORNO -->
         <div class="header-center">
-            <!-- OROLOGIO -->
             <div class="clock-widget" id="clockWidget">
                 <div class="clock-icon">🕐</div>
                 <div class="clock-info">
@@ -379,7 +372,6 @@
                 </div>
             </div>
             
-            <!-- METEO -->
             <div class="weather-widget" id="weatherWidget">
                 <div class="weather-icon" id="weatherIcon">🌡️</div>
                 <div class="weather-info">
@@ -390,7 +382,6 @@
             </div>
         </div>
         
-        <!-- STATUS -->
         <div class="status">
             <div class="status-dot" id="statusDot"></div>
             <span id="statusText">Connessione...</span>
@@ -444,7 +435,7 @@
                 <div class="chart-title">Produzione Oraria - Oggi</div>
                 <div class="chart-current-hour" id="chartCurrentHour">Dati fino alle --:--</div>
             </div>
-            <svg class="chart-svg" id="chartSvg" viewBox="0 0 1200 280" preserveAspectRatio="none"></svg>
+            <svg class="chart-svg" id="chartSvg" viewBox="0 0 1200 200" preserveAspectRatio="none"></svg>
         </div>
     </main>
 
@@ -679,8 +670,8 @@ async function updateChart() {
 
 function renderChart(data, currentHour) {
     var svg = document.getElementById('chartSvg');
-    var w = 1200, h = 280;
-    var pad = {top: 20, right: 30, bottom: 35, left: 60};
+    var w = 1200, h = 200;
+    var pad = {top: 15, right: 30, bottom: 25, left: 60};
     var chartW = w - pad.left - pad.right;
     var chartH = h - pad.top - pad.bottom;
     var max = Math.max.apply(null, data.concat([1]));
@@ -689,13 +680,15 @@ function renderChart(data, currentHour) {
 
     var html = '';
     
+    // Griglia
     for (var i = 0; i <= 5; i++) {
         var y = pad.top + (chartH * i / 5);
         var val = (max * (5-i) / 5).toFixed(1);
         html += '<line x1="' + pad.left + '" y1="' + y + '" x2="' + (w-pad.right) + '" y2="' + y + '" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="4,4"/>';
-        html += '<text x="' + (pad.left-10) + '" y="' + (y+4) + '" text-anchor="end" fill="#556677" font-size="12" font-family="Segoe UI">' + val + '</text>';
+        html += '<text x="' + (pad.left-10) + '" y="' + (y+4) + '" text-anchor="end" fill="#556677" font-size="11" font-family="Segoe UI">' + val + '</text>';
     }
 
+    // Barre
     for (var i = 0; i < data.length; i++) {
         var val = parseFloat(data[i]);
         var barH = (val / max) * chartH;
@@ -719,13 +712,19 @@ function renderChart(data, currentHour) {
         html += '<rect x="' + x + '" y="' + y + '" width="' + barW + '" height="' + Math.max(barH, 1) + '" fill="' + color + '" rx="3"/>';
         
         if (i % 3 === 0 && i <= currentHour + 3) {
-            html += '<text x="' + (x + barW/2) + '" y="' + (h-8) + '" text-anchor="middle" fill="#556677" font-size="12" font-family="Segoe UI">' + i + ':00</text>';
+            html += '<text x="' + (x + barW/2) + '" y="' + (h-6) + '" text-anchor="middle" fill="#556677" font-size="11" font-family="Segoe UI">' + i + ':00</text>';
         }
     }
     
+    // LINEA ORARIO CORRENTE - CONTINUA, VERDE, PROLUNGATA
     if (currentHour < 23) {
         var currentX = pad.left + (currentHour * (barW + gap)) + gap/2 + barW;
-        html += '<line x1="' + currentX + '" y1="' + pad.top + '" x2="' + currentX + '" y2="' + (pad.top + chartH) + '" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5,5"/>';
+        // Linea principale
+        html += '<line x1="' + currentX + '" y1="' + (pad.top - 20) + '" x2="' + currentX + '" y2="' + (pad.top + chartH + 20) + '" stroke="#7ed957" stroke-width="2"/>';
+        // Punto in alto
+        html += '<circle cx="' + currentX + '" cy="' + (pad.top - 20) + '" r="4" fill="#7ed957"/>';
+        // Punto in basso
+        html += '<circle cx="' + currentX + '" cy="' + (pad.top + chartH + 20) + '" r="4" fill="#7ed957"/>';
     }
     
     svg.innerHTML = html;
