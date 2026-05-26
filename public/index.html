@@ -45,7 +45,32 @@
         .header-right {
             display: flex;
             align-items: center;
-            gap: 25px;
+            gap: 20px;
+        }
+        
+        /* OROLOGIO */
+        .clock-widget {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 107, 53, 0.15);
+            border: 2px solid #ff6b35;
+            border-radius: 20px;
+            padding: 12px 24px;
+            min-width: 120px;
+        }
+        .clock-time {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ff6b35;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 2px;
+        }
+        .clock-date {
+            font-size: 0.85rem;
+            color: #8899aa;
+            margin-top: 4px;
         }
         
         /* WIDGET METEO */
@@ -101,7 +126,7 @@
             50% { opacity: 0.5; transform: scale(0.85); }
         }
 
-        /* MAIN - GRID RICONFIGURATO */
+        /* MAIN */
         .main {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -110,7 +135,7 @@
             padding: 20px 50px;
         }
 
-        /* CARDS - COMPATTE */
+        /* CARDS */
         .card {
             background: linear-gradient(145deg, #132238 0%, #1a2d4a 100%);
             border-radius: 24px;
@@ -160,7 +185,6 @@
             margin-top: 10px;
         }
 
-        /* POTENZA ARANCIO */
         .power-card .card-value { 
             color: #ff6b35; 
             font-size: 5.5rem;
@@ -188,7 +212,7 @@
             background: linear-gradient(90deg, #00a651, #7ed957);
         }
 
-        /* CHART - AMPLIATO */
+        /* CHART */
         .chart-card {
             grid-column: 1 / -1;
             padding: 20px 30px;
@@ -206,6 +230,11 @@
             color: #8899aa;
             text-transform: uppercase;
             letter-spacing: 3px;
+        }
+        .chart-current-hour {
+            font-size: 1rem;
+            color: #ff6b35;
+            font-weight: 500;
         }
         .chart-svg {
             width: 100%;
@@ -316,6 +345,12 @@
             <div class="subtitle">Via Primo Maggio 8 - Barbara (AN) Italy | Impianto Fotovoltaico 600 kWp</div>
         </div>
         <div class="header-right">
+            <!-- OROLOGIO -->
+            <div class="clock-widget" id="clockWidget">
+                <div class="clock-time" id="clockTime">--:--</div>
+                <div class="clock-date" id="clockDate">--/--/----</div>
+            </div>
+            <!-- METEO -->
             <div class="weather-widget" id="weatherWidget">
                 <div class="weather-icon" id="weatherIcon">🌡️</div>
                 <div class="weather-info">
@@ -324,6 +359,7 @@
                     <div class="weather-details" id="weatherDetails">--</div>
                 </div>
             </div>
+            <!-- STATUS -->
             <div class="status">
                 <div class="status-dot" id="statusDot"></div>
                 <span id="statusText">Connessione...</span>
@@ -376,6 +412,7 @@
         <div class="card chart-card">
             <div class="chart-header">
                 <div class="chart-title">Produzione Oraria - Oggi</div>
+                <div class="chart-current-hour" id="chartCurrentHour">Aggiornato alle --:--</div>
             </div>
             <svg class="chart-svg" id="chartSvg" viewBox="0 0 1200 280" preserveAspectRatio="none"></svg>
         </div>
@@ -402,6 +439,21 @@ const CONFIG = {
     WEATHER_LAT: 43.5667,
     WEATHER_LON: 13.5167
 };
+
+// OROLOGIO
+function updateClock() {
+    var now = new Date();
+    var hours = String(now.getHours()).padStart(2, '0');
+    var minutes = String(now.getMinutes()).padStart(2, '0');
+    var day = String(now.getDate()).padStart(2, '0');
+    var month = String(now.getMonth() + 1).padStart(2, '0');
+    var year = now.getFullYear();
+    
+    document.getElementById('clockTime').textContent = hours + ':' + minutes;
+    document.getElementById('clockDate').textContent = day + '/' + month + '/' + year;
+}
+updateClock();
+setInterval(updateClock, 1000);
 
 // API SolarEdge
 async function apiCall(endpoint, params) {
@@ -527,11 +579,14 @@ async function updateDashboard() {
     }
 }
 
-// GRAFICO CORRETTO - con debug
+// GRAFICO SOLO FINO ALL'ORA CORRENTE
 async function updateChart() {
     try {
-        var today = new Date().toISOString().split('T')[0];
-        console.log('Chart - fetching energy for:', today);
+        var now = new Date();
+        var currentHour = now.getHours();
+        var today = now.toISOString().split('T')[0];
+        
+        console.log('Chart - current hour:', currentHour);
         
         var data = await apiCall('energy', {
             timeUnit: 'HOUR',
@@ -541,76 +596,67 @@ async function updateChart() {
         
         console.log('Chart - API response:', data);
         
-        // Prova diverse strutture JSON possibili
         var values = [];
-        
         if (data.energy && data.energy.values) {
             values = data.energy.values;
-        } else if (data.siteEnergyList && data.siteEnergyList[0] && data.siteEnergyList[0].energyValues) {
-            values = data.siteEnergyList[0].energyValues;
-        } else if (data.energyDetails && data.energyDetails.meters && data.energyDetails.meters[0]) {
-            values = data.energyDetails.meters[0].values;
         }
         
-        console.log('Chart - values found:', values.length, values);
+        console.log('Chart - values:', values.length);
         
-        // Se non ci sono dati reali, usa dati demo per test
-        if (!values || values.length === 0) {
-            console.log('Chart - no data, using demo values');
-            // Dati demo per test visivo
-            values = [
-                {date: today + ' 06:00:00', value: 15000},
-                {date: today + ' 07:00:00', value: 45000},
-                {date: today + ' 08:00:00', value: 85000},
-                {date: today + ' 09:00:00', value: 120000},
-                {date: today + ' 10:00:00', value: 150000},
-                {date: today + ' 11:00:00', value: 180000},
-                {date: today + ' 12:00:00', value: 200000},
-                {date: today + ' 13:00:00', value: 210000},
-                {date: today + ' 14:00:00', value: 220000},
-                {date: today + ' 15:00:00', value: 200000},
-                {date: today + ' 16:00:00', value: 150000},
-                {date: today + ' 17:00:00', value: 80000},
-                {date: today + ' 18:00:00', value: 30000}
-            ];
-        }
-        
-        // Estrai dati orari
+        // Filtra solo le ore passate (fino all'ora corrente)
         var hourly = new Array(24).fill(0);
+        var hasRealData = false;
         
         for (var i = 0; i < values.length; i++) {
             var v = values[i];
             if (!v.value && v.value !== 0) continue;
             
-            var dateObj;
-            if (v.date) {
-                dateObj = new Date(v.date);
-            } else if (v.timestamp) {
-                dateObj = new Date(v.timestamp);
-            }
-            
+            var dateObj = v.date ? new Date(v.date) : null;
             var h = dateObj ? dateObj.getHours() : i;
-            hourly[h] = parseFloat(v.value);
+            
+            // Solo se l'ora è <= ora corrente
+            if (h <= currentHour) {
+                hourly[h] = parseFloat(v.value);
+                if (v.value > 0) hasRealData = true;
+            }
+        }
+        
+        // Se non ci sono dati reali, usa demo per test
+        if (!hasRealData) {
+            console.log('Chart - using demo data');
+            var demoValues = [0,0,0,0,0,0, 15,45,85,120,150,180,200,210,220,230,220,200,150,80,30,5,0,0];
+            for (var i = 0; i <= currentHour && i < 24; i++) {
+                hourly[i] = demoValues[i] * 1000; // in Wh
+            }
         }
         
         // Converti in kWh
         var chartData = [];
         for (var i = 0; i < 24; i++) {
-            chartData.push((hourly[i] / 1000).toFixed(2));
+            if (i <= currentHour) {
+                chartData.push((hourly[i] / 1000).toFixed(2));
+            } else {
+                chartData.push(0); // Ore future = 0
+            }
         }
         
-        console.log('Chart - final data:', chartData);
-        renderChart(chartData);
+        console.log('Chart - final data (first ' + (currentHour + 1) + ' hours):', chartData.slice(0, currentHour + 1));
+        
+        // Aggiorna testo "Aggiornato alle"
+        var hours = String(currentHour).padStart(2, '0');
+        var minutes = String(now.getMinutes()).padStart(2, '0');
+        document.getElementById('chartCurrentHour').textContent = 'Dati fino alle ' + hours + ':' + minutes;
+        
+        renderChart(chartData, currentHour);
 
     } catch (e) {
         console.error('Chart error:', e);
-        // Dati demo in caso di errore
         var demoData = [0,0,0,0,0,0, 15,45,85,120,150,180,200,210,220,230,220,200,150,80,30,5,0,0];
-        renderChart(demoData);
+        renderChart(demoData, 21);
     }
 }
 
-function renderChart(data) {
+function renderChart(data, currentHour) {
     var svg = document.getElementById('chartSvg');
     var w = 1200, h = 280;
     var pad = {top: 20, right: 30, bottom: 35, left: 60};
@@ -630,21 +676,42 @@ function renderChart(data) {
         html += '<text x="' + (pad.left-10) + '" y="' + (y+4) + '" text-anchor="end" fill="#556677" font-size="12" font-family="Segoe UI">' + val + '</text>';
     }
 
-    // Barre
+    // Barre - solo fino all'ora corrente, poi grigio/trasparente
     for (var i = 0; i < data.length; i++) {
         var val = parseFloat(data[i]);
         var barH = (val / max) * chartH;
         var x = pad.left + (i * (barW + gap)) + gap/2;
         var y = pad.top + chartH - barH;
         var intensity = val / max;
-        var color = intensity > 0.7 ? '#ff6b35' : intensity > 0.3 ? '#7ed957' : '#1e3a5f';
+        
+        // Colore: arancio per picco, verde per medio, grigio per ore future
+        var color;
+        if (i > currentHour) {
+            color = '#1e3a5f'; // Ore future = grigio scuro (invisibile praticamente)
+            barH = 1; // Barra minima
+            y = pad.top + chartH - 1;
+        } else if (intensity > 0.7) {
+            color = '#ff6b35';
+        } else if (intensity > 0.3) {
+            color = '#7ed957';
+        } else {
+            color = '#1e3a5f';
+        }
         
         html += '<rect x="' + x + '" y="' + y + '" width="' + barW + '" height="' + Math.max(barH, 1) + '" fill="' + color + '" rx="3"/>';
         
-        if (i % 3 === 0) {
+        // Label ore ogni 3 ore, solo fino all'ora corrente + 1
+        if (i % 3 === 0 && i <= currentHour + 3) {
             html += '<text x="' + (x + barW/2) + '" y="' + (h-8) + '" text-anchor="middle" fill="#556677" font-size="12" font-family="Segoe UI">' + i + ':00</text>';
         }
     }
+    
+    // Linea verticale indicatore "ora corrente"
+    if (currentHour < 23) {
+        var currentX = pad.left + (currentHour * (barW + gap)) + gap/2 + barW;
+        html += '<line x1="' + currentX + '" y1="' + pad.top + '" x2="' + currentX + '" y2="' + (pad.top + chartH) + '" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5,5"/>';
+    }
+    
     svg.innerHTML = html;
 }
 
@@ -653,6 +720,7 @@ getWeather();
 updateDashboard();
 setInterval(getWeather, 600000);
 setInterval(updateDashboard, CONFIG.REFRESH_MS);
+setInterval(updateClock, 1000);
 setTimeout(function() { location.reload(); }, 3600000);
 </script>
 </body>
