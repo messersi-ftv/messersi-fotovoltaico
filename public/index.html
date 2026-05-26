@@ -190,17 +190,17 @@
         }
 
         .card-label {
-            font-size: 1.5rem;        /* INGRANDITO: da 1rem a 1.5rem */
+            font-size: 1.5rem;
             color: #8899aa;
             text-transform: uppercase;
-            letter-spacing: 4px;      /* INGRANDITO: da 3px a 4px */
-            margin-bottom: 12px;        /* INGRANDITO: da 8px a 12px */
+            letter-spacing: 4px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 15px;                  /* INGRANDITO: da 10px a 15px */
+            gap: 15px;
         }
         .card-icon {
-            font-size: 3rem;            /* INGRANDITO: da 2rem a 3rem */
+            font-size: 3rem;
         }
         .card-value {
             font-size: 4.5rem;
@@ -379,7 +379,7 @@
     <header class="header">
         <div class="header-left">
             <h1>MESSERSÌ PACKAGING</h1>
-            <div class="subtitle">Via Primo Maggio 8 - Barbara (AN) Italy | Impianto Fotovoltaico 658.92 kWp</div>
+            <div class="subtitle">Via Primo Maggio 8 - Barbara (AN) Italy | Impianto Fotovoltaico 600 kWp</div>
         </div>
         
         <div class="header-center">
@@ -632,6 +632,7 @@ async function updateDashboard() {
     }
 }
 
+// GRAFICO CON BARRE A FORMA LOGO ENWE
 async function updateChart() {
     try {
         var now = new Date();
@@ -694,6 +695,10 @@ async function updateChart() {
     }
 }
 
+// BARRE CON FORMA LOGO ENWE:
+// - Arrotondato in alto a destra (rx)
+// - Arrotondato in basso a sinistra (ry)
+// - Angoli retti negli altri due spigoli
 function renderChart(data, currentHour) {
     var svg = document.getElementById('chartSvg');
     var w = 1200, h = 200;
@@ -703,9 +708,11 @@ function renderChart(data, currentHour) {
     var max = Math.max.apply(null, data.concat([1]));
     var barW = (chartW / 24) * 0.7;
     var gap = (chartW / 24) * 0.3;
+    var radius = Math.min(barW / 2, 15); // Raggio arrotondamento
 
     var html = '';
     
+    // Griglia
     for (var i = 0; i <= 5; i++) {
         var y = pad.top + (chartH * i / 5);
         var val = (max * (5-i) / 5).toFixed(1);
@@ -713,6 +720,7 @@ function renderChart(data, currentHour) {
         html += '<text x="' + (pad.left-10) + '" y="' + (y+4) + '" text-anchor="end" fill="#556677" font-size="11" font-family="Segoe UI">' + val + '</text>';
     }
 
+    // Barre con forma logo ENWE
     for (var i = 0; i < data.length; i++) {
         var val = parseFloat(data[i]);
         var barH = (val / max) * chartH;
@@ -733,13 +741,41 @@ function renderChart(data, currentHour) {
             color = '#1e3a5f';
         }
         
-        html += '<rect x="' + x + '" y="' + y + '" width="' + barW + '" height="' + Math.max(barH, 1) + '" fill="' + color + '" rx="3"/>';
+        // FORMA LOGO ENWE: arrotondato alto-dx e basso-sx
+        // Uso path SVG per controllo completo dei 4 angoli
+        var r = Math.min(radius, barW / 2, barH / 2);
+        if (barH < 2) r = 0;
+        
+        // Path: inizia basso-sx (arrotondato), su, alto-dx (arrotondato), giù, chiusura
+        var path = '';
+        if (r > 0 && barH > r * 2) {
+            // Basso a sinistra: arrotondato (Q = quadratic bezier)
+            path += 'M ' + x + ' ' + (y + barH - r) + ' ';
+            path += 'Q ' + x + ' ' + (y + barH) + ' ' + (x + r) + ' ' + (y + barH) + ' ';
+            // Base fino a basso-dx (retto)
+            path += 'L ' + (x + barW) + ' ' + (y + barH) + ' ';
+            // Su fino a alto-dx (retto fino all'inizio arrotondamento)
+            path += 'L ' + (x + barW) + ' ' + (y + r) + ' ';
+            // Alto a destra: arrotondato
+            path += 'Q ' + (x + barW) + ' ' + y + ' ' + (x + barW - r) + ' ' + y + ' ';
+            // Sinistra fino a alto-sx (retto)
+            path += 'L ' + (x + r) + ' ' + y + ' ';
+            // Chiusura verso basso-sx (retto)
+            path += 'L ' + x + ' ' + (y + barH - r) + ' ';
+            path += 'Z';
+        } else {
+            // Rettangolo normale se troppo piccolo
+            path = 'M ' + x + ' ' + y + ' h ' + barW + ' v ' + barH + ' h ' + (-barW) + ' Z';
+        }
+        
+        html += '<path d="' + path + '" fill="' + color + '"/>';
         
         if (i % 3 === 0 && i <= currentHour + 3) {
             html += '<text x="' + (x + barW/2) + '" y="' + (h-6) + '" text-anchor="middle" fill="#556677" font-size="11" font-family="Segoe UI">' + i + ':00</text>';
         }
     }
     
+    // LINEA ORARIO CORRENTE
     if (currentHour < 23) {
         var currentX = pad.left + (currentHour * (barW + gap)) + gap/2 + barW;
         html += '<line x1="' + currentX + '" y1="' + (pad.top - 20) + '" x2="' + currentX + '" y2="' + (pad.top + chartH + 20) + '" stroke="#7ed957" stroke-width="2"/>';
