@@ -87,7 +87,7 @@
             margin-top: 5px;
         }
         
-        /* WIDGET METEO - LAYOUT ORIZZONTALE COME IMMAGINE */
+        /* WIDGET METEO - LAYOUT ORIZZONTALE */
         .weather-widget {
             display: flex;
             align-items: center;
@@ -117,7 +117,6 @@
             font-size: 1.5rem;
             color: #8899aa;
         }
-        /* UMIDITÀ E VENTO AFFIANCATI, INGRANDITI */
         .weather-details-row {
             display: flex;
             align-items: center;
@@ -169,7 +168,7 @@
             padding: 15px 50px;
         }
 
-        /* CARDS */
+        /* CARDS - LABEL INGRANDITE 1.5x */
         .card {
             background: linear-gradient(145deg, #132238 0%, #1a2d4a 100%);
             border-radius: 20px;
@@ -191,17 +190,17 @@
         }
 
         .card-label {
-            font-size: 1rem;
+            font-size: 1.5rem;        /* INGRANDITO: da 1rem a 1.5rem */
             color: #8899aa;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 8px;
+            letter-spacing: 4px;      /* INGRANDITO: da 3px a 4px */
+            margin-bottom: 12px;        /* INGRANDITO: da 8px a 12px */
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;                  /* INGRANDITO: da 10px a 15px */
         }
         .card-icon {
-            font-size: 2rem;
+            font-size: 3rem;            /* INGRANDITO: da 2rem a 3rem */
         }
         .card-value {
             font-size: 4.5rem;
@@ -376,16 +375,14 @@
 
     <div class="error-toast" id="errorToast"></div>
 
-    <!-- HEADER - ALTEZZA RADDOPPIATA -->
+    <!-- HEADER -->
     <header class="header">
         <div class="header-left">
             <h1>MESSERSÌ PACKAGING</h1>
-            <div class="subtitle">Via Primo Maggio 8 - Barbara (AN) Italy | Impianto Fotovoltaico 658,92 kWp</div>
+            <div class="subtitle">Via Primo Maggio 8 - Barbara (AN) Italy | Impianto Fotovoltaico 600 kWp</div>
         </div>
         
-        <!-- CENTRO: ORA + METEO CENTRATI VERTICALMENTE -->
         <div class="header-center">
-            <!-- OROLOGIO -->
             <div class="clock-widget" id="clockWidget">
                 <div class="clock-icon">🕐</div>
                 <div class="clock-info">
@@ -394,7 +391,6 @@
                 </div>
             </div>
             
-            <!-- METEO - LAYOUT ORIZZONTALE -->
             <div class="weather-widget" id="weatherWidget">
                 <div class="weather-icon" id="weatherIcon">☀️</div>
                 <div class="weather-main">
@@ -402,7 +398,6 @@
                         <div class="weather-temp" id="weatherTemp">--°C</div>
                         <div class="weather-desc" id="weatherDesc">--</div>
                     </div>
-                    <!-- UMIDITÀ E VENTO AFFIANCATI -->
                     <div class="weather-details-row">
                         <div class="weather-detail-item">
                             <span class="weather-detail-icon">💧</span>
@@ -417,7 +412,6 @@
             </div>
         </div>
         
-        <!-- STATUS -->
         <div class="status">
             <div class="status-dot" id="statusDot"></div>
             <span id="statusText">Connessione...</span>
@@ -497,7 +491,6 @@ const CONFIG = {
     WEATHER_LON: 13.5167
 };
 
-// OROLOGIO
 function updateClock() {
     var now = new Date();
     var hours = String(now.getHours()).padStart(2, '0');
@@ -511,7 +504,6 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-// API SolarEdge
 async function apiCall(endpoint, params) {
     var qs = new URLSearchParams({endpoint: endpoint});
     if (params) {
@@ -522,7 +514,6 @@ async function apiCall(endpoint, params) {
     return await res.json();
 }
 
-// API Meteo - LAYOUT ORIZZONTALE
 async function getWeather() {
     try {
         var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + CONFIG.WEATHER_LAT + 
@@ -571,7 +562,6 @@ async function getWeather() {
     }
 }
 
-// Dashboard
 async function updateDashboard() {
     try {
         var data = await apiCall('overview');
@@ -642,7 +632,6 @@ async function updateDashboard() {
     }
 }
 
-// GRAFICO
 async function updateChart() {
     try {
         var now = new Date();
@@ -717,7 +706,6 @@ function renderChart(data, currentHour) {
 
     var html = '';
     
-    // Griglia
     for (var i = 0; i <= 5; i++) {
         var y = pad.top + (chartH * i / 5);
         var val = (max * (5-i) / 5).toFixed(1);
@@ -725,7 +713,6 @@ function renderChart(data, currentHour) {
         html += '<text x="' + (pad.left-10) + '" y="' + (y+4) + '" text-anchor="end" fill="#556677" font-size="11" font-family="Segoe UI">' + val + '</text>';
     }
 
-    // Barre
     for (var i = 0; i < data.length; i++) {
         var val = parseFloat(data[i]);
         var barH = (val / max) * chartH;
@@ -753,7 +740,6 @@ function renderChart(data, currentHour) {
         }
     }
     
-    // LINEA ORARIO CORRENTE - CONTINUA, VERDE, PROLUNGATA
     if (currentHour < 23) {
         var currentX = pad.left + (currentHour * (barW + gap)) + gap/2 + barW;
         html += '<line x1="' + currentX + '" y1="' + (pad.top - 20) + '" x2="' + currentX + '" y2="' + (pad.top + chartH + 20) + '" stroke="#7ed957" stroke-width="2"/>';
@@ -764,7 +750,6 @@ function renderChart(data, currentHour) {
     svg.innerHTML = html;
 }
 
-// Avvio
 getWeather();
 updateDashboard();
 setInterval(getWeather, 600000);
