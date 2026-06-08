@@ -22,46 +22,35 @@
 
         /* ===== HEADER ===== */
         .header {
-            height: 7vh;
-            min-height: 50px;
+            height: 6vh;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 2vw;
-            background: rgba(10, 14, 39, 0.98);
+            padding: 0 1.5vw;
+            background: rgba(10, 14, 39, 0.95);
             border-bottom: 2px solid #00d4ff;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 100;
+            font-size: 1.5vh;
+            white-space: nowrap;
         }
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 1vw;
-            font-size: 1.8vh;
-            white-space: nowrap;
+            gap: 0.8vw;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 50vw;
         }
 
         .header-right {
             display: flex;
             align-items: center;
-            gap: 2vw;
-            font-size: 1.6vh;
+            gap: 1.5vw;
         }
 
         .header-item {
             display: flex;
             align-items: center;
-            gap: 0.5vw;
-            white-space: nowrap;
-        }
-
-        .header-icon {
-            font-size: 2vh;
+            gap: 0.3vw;
         }
 
         /* ===== KPI GRID ===== */
@@ -69,23 +58,21 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
-            gap: 1.5vh;
-            height: 42vh;
-            padding: 1.5vh 2vw;
-            flex-shrink: 0;
+            gap: 1vh;
+            height: 40vh;
+            padding: 1vh 1.5vw;
         }
 
         .kpi-card {
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 1.2vh;
-            padding: 2vh;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.8vh;
+            padding: 1.5vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
-            overflow: hidden;
         }
 
         .kpi-card::before {
@@ -94,86 +81,81 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 2px;
             background: linear-gradient(90deg, #00d4ff, #00ff88);
         }
 
         .kpi-icon {
-            font-size: 3vh;
-            margin-bottom: 1vh;
-            opacity: 0.9;
-        }
-
-        .kpi-label {
-            font-size: 1.8vh;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            opacity: 0.7;
-            margin-bottom: 1vh;
-            text-align: center;
-        }
-
-        .kpi-value {
-            font-size: 6vh;
-            font-weight: 700;
-            line-height: 1;
+            font-size: 2.5vh;
             margin-bottom: 0.5vh;
         }
 
+        .kpi-label {
+            font-size: 1.6vh;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            opacity: 0.7;
+            margin-bottom: 0.5vh;
+        }
+
+        .kpi-value {
+            font-size: 5.5vh;
+            font-weight: 700;
+            line-height: 1;
+        }
+
         .kpi-unit {
-            font-size: 2vh;
+            font-size: 1.8vh;
             opacity: 0.6;
+            margin-top: 0.3vh;
         }
 
         .kpi-sub {
-            font-size: 1.4vh;
+            font-size: 1.2vh;
             opacity: 0.5;
-            margin-top: 0.5vh;
+            margin-top: 0.3vh;
         }
 
-        /* Colori KPI */
-        .kpi-orange .kpi-value { color: #ff6b35; }
-        .kpi-green .kpi-value { color: #00ff88; }
-        .kpi-cyan .kpi-value { color: #00d4ff; }
-        .kpi-lime .kpi-value { color: #ccff00; }
+        /* Colori */
+        .kpi-orange { color: #ff6b35; }
+        .kpi-green { color: #00ff88; }
+        .kpi-cyan { color: #00d4ff; }
+        .kpi-lime { color: #ccff00; }
 
         /* ===== CHART SECTION ===== */
         .chart-section {
-            flex: 1;
+            height: 48vh;
+            padding: 0 1.5vw 1vh;
             display: flex;
             flex-direction: column;
-            padding: 0 2vw 1.5vh;
-            min-height: 0;
         }
 
         .chart-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1vh;
-            flex-shrink: 0;
+            margin-bottom: 0.5vh;
+            height: 3vh;
         }
 
         .chart-title {
-            font-size: 2vh;
+            font-size: 1.6vh;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
             opacity: 0.8;
         }
 
         .chart-update {
-            font-size: 1.4vh;
+            font-size: 1.2vh;
             opacity: 0.5;
         }
 
         .chart-container {
             flex: 1;
             position: relative;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 1vh;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 0.8vh;
+            border: 1px solid rgba(255, 255, 255, 0.06);
             overflow: hidden;
-            min-height: 0;
         }
 
         #productionChart {
@@ -181,8 +163,15 @@
             height: 100%;
         }
 
-        /* ===== LOADING / ERROR ===== */
-        .loading, .error {
+        .error-msg {
+            color: #ff6b35;
+            font-size: 1.4vh;
+            text-align: center;
+            padding: 1vh;
+        }
+
+        /* ===== LOADING ===== */
+        .loading {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -190,74 +179,55 @@
             font-size: 2vh;
             z-index: 1000;
         }
-
-        .error {
-            color: #ff6b35;
-        }
-
-        /* ===== RESPONSIVE TV SAFE AREA ===== */
-        @media screen and (min-width: 1920px) {
-            .kpi-value { font-size: 5vh; }
-            .kpi-label { font-size: 1.6vh; }
-        }
     </style>
 </head>
 <body>
     <!-- HEADER -->
     <div class="header">
         <div class="header-left">
-            <span class="header-icon">🏭</span>
-            <span id="siteName">Via Primo Maggio 8 - Barbara (AN) Italy | Impianto Fotovoltaico 658.92 kWp</span>
+            <span>🏭</span>
+            <span id="siteName">Via Primo Maggio 8 - Barbara (AN) | 658.92 kWp</span>
         </div>
         <div class="header-right">
-            <div class="header-item">
-                <span class="header-icon">☀️</span>
-                <span id="weatherStatus">Sunny</span>
-            </div>
-            <div class="header-item">
-                <span class="header-icon">💧</span>
-                <span id="humidity">49%</span>
-            </div>
-            <div class="header-item">
-                <span class="header-icon">💨</span>
-                <span id="windSpeed">8.9 km/h</span>
-            </div>
+            <div class="header-item"><span>☀️</span><span id="weather">Sunny</span></div>
+            <div class="header-item"><span>💧</span><span id="humidity">49%</span></div>
+            <div class="header-item"><span>💨</span><span id="wind">8.9 km/h</span></div>
         </div>
     </div>
 
     <!-- KPI GRID -->
     <div class="kpi-grid">
-        <div class="kpi-card kpi-orange">
+        <div class="kpi-card">
             <div class="kpi-icon">⚡</div>
             <div class="kpi-label">Potenza Attuale</div>
-            <div class="kpi-value" id="currentPower">---</div>
+            <div class="kpi-value kpi-orange" id="currentPower">---</div>
             <div class="kpi-unit">kW</div>
             <div class="kpi-sub" id="powerSub">---</div>
         </div>
-        <div class="kpi-card kpi-green">
+        <div class="kpi-card">
             <div class="kpi-icon">📅</div>
             <div class="kpi-label">Energia Oggi</div>
-            <div class="kpi-value" id="energyToday">---</div>
+            <div class="kpi-value kpi-green" id="energyToday">---</div>
             <div class="kpi-unit">kWh</div>
             <div class="kpi-sub" id="todaySub">---</div>
         </div>
-        <div class="kpi-card kpi-cyan">
+        <div class="kpi-card">
             <div class="kpi-icon">🏆</div>
             <div class="kpi-label">Energia Totale</div>
-            <div class="kpi-value" id="energyTotal">---</div>
+            <div class="kpi-value kpi-cyan" id="energyTotal">---</div>
             <div class="kpi-unit">MWh</div>
             <div class="kpi-sub" id="totalSub">---</div>
         </div>
-        <div class="kpi-card kpi-lime">
+        <div class="kpi-card">
             <div class="kpi-icon">🌱</div>
             <div class="kpi-label">CO₂ Risparmiata</div>
-            <div class="kpi-value" id="co2Saved">---</div>
+            <div class="kpi-value kpi-lime" id="co2Saved">---</div>
             <div class="kpi-unit">kg</div>
             <div class="kpi-sub" id="co2Sub">---</div>
         </div>
     </div>
 
-    <!-- CHART SECTION -->
+    <!-- CHART -->
     <div class="chart-section">
         <div class="chart-header">
             <div class="chart-title">Produzione Oraria - Oggi</div>
@@ -268,127 +238,116 @@
         </div>
     </div>
 
-    <div class="loading" id="loading">Caricamento dati...</div>
+    <div class="loading" id="loading">Caricamento...</div>
 
     <script>
-        // ===== CONFIGURAZIONE =====
+        // ===== CONFIG =====
         const API_KEY = 'R32EGC7MEDO2B47EAS4S59NM5EEM1RYX';
         const SITE_ID = '4858098';
-        const API_BASE = 'https://monitoringapi.solaredge.com/sites';
 
-        // ===== FETCH DATI =====
-        async function fetchData() {
+        // ===== FETCH =====
+        async function loadData() {
             try {
-                const response = await fetch(`${API_BASE}/${SITE_ID}/overview?api_key=${API_KEY}`);
+                // Chiamata API esatta come nel codice funzionante
+                const url = `https://monitoringapi.solaredge.com/sites/${SITE_ID}/overview?api_key=${API_KEY}`;
+                const response = await fetch(url);
                 const data = await response.json();
                 
+                console.log('Risposta API:', data); // Debug
+                
                 if (data.overview) {
-                    updateDashboard(data.overview);
+                    updateKPI(data.overview);
+                    document.getElementById('loading').style.display = 'none';
+                } else {
+                    throw new Error('Dati overview mancanti');
                 }
-                document.getElementById('loading').style.display = 'none';
-            } catch (error) {
-                console.error('Errore fetch:', error);
-                document.getElementById('loading').textContent = 'Errore caricamento dati';
-                document.getElementById('loading').className = 'error';
+            } catch (err) {
+                console.error('Errore:', err);
+                document.getElementById('loading').innerHTML = '<span class="error-msg">Errore caricamento dati - ricaricare pagina</span>';
             }
         }
 
-        // ===== AGGIORNA DASHBOARD =====
-        function updateDashboard(data) {
+        // ===== UPDATE KPI =====
+        function updateKPI(overview) {
             // Potenza attuale
-            document.getElementById('currentPower').textContent = data.currentPower ? data.currentPower.toFixed(1) : '0.0';
-            document.getElementById('powerSub').textContent = data.currentPower ? 'Produzione in corso' : 'Nessuna produzione';
+            const power = overview.currentPower?.power || 0;
+            document.getElementById('currentPower').textContent = power.toFixed(1);
+            document.getElementById('powerSub').textContent = power > 0 ? 'Produzione attiva' : 'Nessuna produzione';
             
             // Energia oggi
-            document.getElementById('energyToday').textContent = data.lastDayData ? data.lastDayData.energy.toFixed(1) : '0.0';
-            document.getElementById('todaySub').textContent = data.lastDayData ? (data.lastDayData.energy / 1000).toFixed(3) + ' MWh' : '0 MWh';
+            const today = overview.lastDayData?.energy || 0;
+            document.getElementById('energyToday').textContent = today.toFixed(1);
+            document.getElementById('todaySub').textContent = (today / 1000).toFixed(3) + ' MWh';
             
             // Energia totale
-            document.getElementById('energyTotal').textContent = data.lifeTimeData ? (data.lifeTimeData.energy / 1000000).toFixed(2) : '0.00';
-            document.getElementById('totalSub').textContent = data.lifeTimeData ? (data.lifeTimeData.energy / 1000).toFixed(1) + ' MWh' : '0 MWh';
+            const total = overview.lifeTimeData?.energy || 0;
+            document.getElementById('energyTotal').textContent = (total / 1000000).toFixed(2);
+            document.getElementById('totalSub').textContent = (total / 1000).toFixed(1) + ' MWh';
             
             // CO2
-            const co2 = data.lifeTimeData ? (data.lifeTimeData.energy * 0.0004) : 0;
+            const co2 = total * 0.0004;
             document.getElementById('co2Saved').textContent = co2.toFixed(3);
-            document.getElementById('co2Sub').textContent = '≈ ' + (co2 / 10).toFixed(1) + ' alberi equivalenti';
+            document.getElementById('co2Sub').textContent = '≈ ' + (co2 / 10).toFixed(1) + ' alberi';
             
             // Timestamp
             const now = new Date();
-            document.getElementById('lastUpdate').textContent = 'Dati fino alle ' + now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('lastUpdate').textContent = 'Aggiornato: ' + 
+                now.getHours().toString().padStart(2,'0') + ':' + 
+                now.getMinutes().toString().padStart(2,'0');
         }
 
-        // ===== GRAFICO SEMPLICE (CANVAS) =====
+        // ===== CHART =====
         function drawChart() {
             const canvas = document.getElementById('productionChart');
             const ctx = canvas.getContext('2d');
-            
-            // Adatta canvas al container
             const container = canvas.parentElement;
+            
             canvas.width = container.clientWidth;
             canvas.height = container.clientHeight;
             
             const w = canvas.width;
             const h = canvas.height;
             
-            // Dati di esempio (sostituire con dati reali API)
-            const hours = ['06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18'];
-            const values = [0, 0, 15, 45, 85, 120, 150, 170, 160, 130, 90, 40, 10];
+            // Dati di esempio (da sostituire con dati reali API)
+            const hours = ['06','07','08','09','10','11','12','13','14','15','16','17','18'];
+            const values = [0,0,15,45,85,120,150,170,160,130,90,40,10];
             const maxVal = Math.max(...values) * 1.2;
             
             // Sfondo
             ctx.fillStyle = 'rgba(255,255,255,0.02)';
             ctx.fillRect(0, 0, w, h);
             
-            // Griglia
-            ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= 5; i++) {
-                const y = h - 30 - (i * (h - 50) / 5);
-                ctx.beginPath();
-                ctx.moveTo(40, y);
-                ctx.lineTo(w - 20, y);
-                ctx.stroke();
-            }
-            
             // Barre
-            const barWidth = (w - 80) / hours.length * 0.7;
-            const spacing = (w - 80) / hours.length;
+            const barWidth = (w - 60) / hours.length * 0.7;
+            const spacing = (w - 60) / hours.length;
             
             hours.forEach((hour, i) => {
-                const barHeight = (values[i] / maxVal) * (h - 60);
-                const x = 50 + i * spacing;
-                const y = h - 30 - barHeight;
+                const barHeight = (values[i] / maxVal) * (h - 40);
+                const x = 40 + i * spacing;
+                const y = h - 25 - barHeight;
                 
-                // Gradiente barra
-                const gradient = ctx.createLinearGradient(0, y, 0, h - 30);
+                const gradient = ctx.createLinearGradient(0, y, 0, h - 25);
                 gradient.addColorStop(0, '#00ff88');
                 gradient.addColorStop(1, '#00d4ff');
                 
                 ctx.fillStyle = gradient;
                 ctx.fillRect(x, y, barWidth, barHeight);
                 
-                // Etichetta ora
+                // Etichetta
                 ctx.fillStyle = 'rgba(255,255,255,0.6)';
-                ctx.font = `${Math.max(10, h * 0.03)}px Arial`;
+                ctx.font = Math.max(10, h * 0.035) + 'px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText(hour, x + barWidth/2, h - 10);
+                ctx.fillText(hour, x + barWidth/2, h - 8);
             });
-            
-            // Titolo asse Y
-            ctx.fillStyle = 'rgba(255,255,255,0.5)';
-            ctx.font = `${Math.max(10, h * 0.025)}px Arial`;
-            ctx.textAlign = 'left';
-            ctx.fillText('kWh', 10, 20);
         }
 
-        // ===== INIZIALIZZAZIONE =====
+        // ===== INIT =====
         window.addEventListener('load', () => {
-            fetchData();
+            loadData();
             drawChart();
-            setInterval(fetchData, 300000); // Refresh ogni 5 min
+            setInterval(loadData, 300000); // 5 min
         });
-
-        // Ridisegna grafico al resize
+        
         window.addEventListener('resize', drawChart);
     </script>
 </body>
