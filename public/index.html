@@ -25,7 +25,7 @@
             overflow: hidden;
         }
 
-        /* ===== HEADER - COMPATTO PER TV ===== */
+        /* ===== HEADER ===== */
         .header {
             position: relative;
             background: linear-gradient(90deg, #0d2137 0%, #1a3a2a 100%);
@@ -102,6 +102,7 @@
         }
         .weather-icon {
             font-size: 2.5vh;
+            color: #5bc0de; /* COLORE ICONA METEO */
         }
         .weather-main {
             display: flex;
@@ -164,7 +165,7 @@
             50% { opacity: 0.5; transform: scale(0.85); }
         }
 
-        /* ===== MAIN - GRIGLIA COMPATTA ===== */
+        /* ===== MAIN ===== */
         .main {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -174,7 +175,7 @@
             min-height: 0;
         }
 
-        /* ===== CARDS - KPI ===== */
+        /* ===== CARDS ===== */
         .card {
             background: linear-gradient(145deg, #132238 0%, #1a2d4a 100%);
             border-radius: 1.5vh;
@@ -224,28 +225,50 @@
             margin-top: 0.4vh;
         }
 
+        /* POTENZA ATTUALE - INGRANDITA 1.5x + ICONA ARANCIONE */
+        .power-card .card-icon {
+            color: #ff6b35;
+        }
         .power-card .card-value { 
             color: #ff6b35; 
-            font-size: 4.5vh;
+            font-size: 6.75vh; /* 4.5vh * 1.5 */
             text-shadow: 0 0 40px rgba(255, 107, 53, 0.4);
         }
         .power-card::before {
             background: linear-gradient(90deg, #ff6b35, #ff9f43);
         }
 
-        .energy-today .card-value { color: #7ed957; }
+        /* ENERGIA OGGI - INGRANDITA 1.5x + ICONA VERDE */
+        .energy-today .card-icon {
+            color: #7ed957;
+        }
+        .energy-today .card-value {
+            color: #7ed957;
+            font-size: 6vh; /* 4vh * 1.5 */
+        }
         .energy-today::before {
             background: linear-gradient(90deg, #00a651, #7ed957);
         }
 
-        .energy-total .card-value { color: #2e8b9b; }
+        /* ENERGIA TOTALE - INGRANDITA 1.5x + ICONA CIANO */
+        .energy-total .card-icon {
+            color: #2e8b9b;
+        }
+        .energy-total .card-value {
+            color: #2e8b9b;
+            font-size: 6vh; /* 4vh * 1.5 */
+        }
         .energy-total::before {
             background: linear-gradient(90deg, #2e8b9b, #5bc0de);
         }
 
+        /* CO2 RISPARMIATA - INGRANDITA 1.5x + ICONA VERDE LIME */
+        .co2-card .card-icon {
+            color: #7ed957;
+        }
         .co2-card .card-value { 
             color: #7ed957; 
-            font-size: 3vh;
+            font-size: 4.5vh; /* 3vh * 1.5 */
         }
         .co2-card::before {
             background: linear-gradient(90deg, #00a651, #7ed957);
@@ -282,10 +305,6 @@
             width: 100%;
             flex: 1;
             min-height: 0;
-        }
-        .chart-svg text {
-            font-size: 1.4vh !important;
-            font-family: 'Segoe UI', Arial, sans-serif !important;
         }
 
         /* ===== FOOTER ===== */
