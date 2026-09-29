@@ -37,12 +37,18 @@ export default async function handler(req, res) {
 
     try {
         if (endpoint === 'overview') {
-            // Tre chiamate in parallelo: totali, energia di oggi, potenza corrente
-            const [overview, energyToday, powerToday] = await Promise.all([
-                v2get(`/sites/${SITE_ID}/overview`),
+            // Chiamate in parallelo: dettagli sito, totali, energia di oggi, potenza
+            const [siteInfo, energyToday, powerToday] = await Promise.all([
+                v2get(`/sites/${SITE_ID}`),
                 v2get(`/sites/${SITE_ID}/energy?resolution=HOUR`),
                 v2get(`/sites/${SITE_ID}/power`)
             ]);
+
+            // Totali lifetime: l'overview vuole from/to in formato ISO (Instant).
+            // La data di inizio e' la data di installazione del sito.
+            const fromDate = siteInfo.installationDate || '2020-01-01T00:00:00Z';
+            const toDate = new Date().toISOString();
+            const overview = await v2get(`/sites/${SITE_ID}/overview?from=${encodeURIComponent(fromDate)}&to=${encodeURIComponent(toDate)}`);
 
             // Potenza attuale = ultimo valore non nullo della serie di oggi
             const lastPower = [...(powerToday.values || [])]
