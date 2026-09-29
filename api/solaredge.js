@@ -21,6 +21,9 @@ export default async function handler(req, res) {
     }
 
     const SITE_ID = '4858098';
+    // Data di installazione fissa: evita una chiamata API a ogni refresh
+    // (il limite SolarEdge e' di 300 richieste/giorno per chiave).
+    const INSTALL_DATE = '2026-04-11T00:00:00Z';
     const BASE = 'https://monitoringapi.solaredge.com/v2';
     const { endpoint, timeUnit, startDate, endDate } = req.query;
 
@@ -37,16 +40,14 @@ export default async function handler(req, res) {
 
     try {
         if (endpoint === 'overview') {
-            // Chiamate in parallelo: dettagli sito, totali, energia di oggi, potenza
-            const [siteInfo, energyToday, powerToday] = await Promise.all([
-                v2get(`/sites/${SITE_ID}`),
+            // Chiamate in parallelo: energia di oggi, potenza, totali lifetime
+            const [energyToday, powerToday] = await Promise.all([
                 v2get(`/sites/${SITE_ID}/energy?resolution=HOUR`),
                 v2get(`/sites/${SITE_ID}/power`)
             ]);
 
             // Totali lifetime: l'overview vuole from/to in formato ISO (Instant).
-            // La data di inizio e' la data di installazione del sito.
-            const fromDate = siteInfo.installationDate || '2020-01-01T00:00:00Z';
+            const fromDate = INSTALL_DATE;
             const toDate = new Date().toISOString();
             const overview = await v2get(`/sites/${SITE_ID}/overview?from=${encodeURIComponent(fromDate)}&to=${encodeURIComponent(toDate)}`);
 
