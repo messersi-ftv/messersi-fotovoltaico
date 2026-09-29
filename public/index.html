@@ -514,7 +514,7 @@ const CONFIG = {
     NOMINAL_POWER_KW: 600,
     CO2_FACTOR: 0.4,
     TREE_FACTOR: 10,
-    REFRESH_MS: 300000,
+    REFRESH_MS: 900000, // non piu' usato: lo scheduling e' adattivo in scheduleNextUpdate()
     API_BASE: '/api/solaredge',
     WEATHER_LAT: 43.5667,
     WEATHER_LON: 13.5167
@@ -651,7 +651,12 @@ async function updateDashboard() {
             hour: '2-digit', minute: '2-digit'
         });
 
-        await updateChart();
+        // Di notte (22-07) il grafico giornaliero e' completo: salto l'aggiornamento
+        // per risparmiare chiamate API (limite SolarEdge: 300/giorno).
+        var hr = new Date().getHours();
+        if (hr >= 7 && hr < 22) {
+            await updateChart();
+        }
         document.getElementById('loading').classList.add('hidden');
 
     } catch (e) {
@@ -799,11 +804,23 @@ function renderChart(data, currentHour) {
 }
 
 getWeather();
-updateDashboard();
+updateDashboard().finally(scheduleNextUpdate);
 setInterval(getWeather, 600000);
-setInterval(updateDashboard, CONFIG.REFRESH_MS);
 setInterval(updateClock, 1000);
-setTimeout(function() { location.reload(); }, 3600000);
+
+// Refresh adattivo per rispettare il limite SolarEdge di 300 chiamate/giorno:
+// - ogni 15 minuti di giorno (07:00-21:59), quando l'impianto produce
+// - ogni 60 minuti di notte (22:00-06:59), quando i dati non cambiano
+function scheduleNextUpdate() {
+    var h = new Date().getHours();
+    var delay = (h >= 7 && h < 22) ? 900000 : 3600000;
+    setTimeout(function() {
+        updateDashboard().finally(scheduleNextUpdate);
+    }, delay);
+}
+
+// Ricarica la pagina ogni 12 ore (pulizia memoria sul display) — era ogni 1 ora
+setTimeout(function() { location.reload(); }, 43200000);
 </script>
 </body>
 </html>
